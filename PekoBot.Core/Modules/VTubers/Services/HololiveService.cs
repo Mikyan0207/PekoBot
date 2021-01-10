@@ -269,7 +269,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithDescription(live.Title)
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
 				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
-				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToLongTimeString()}   JST", "https://www.flaticon.com/svg/static/icons/svg/1384/1384060.svg")
+				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToShortTimeString()}", "https://png.pngtree.com/element_our/sm/20180301/sm_5a9797d5c93d3.jpg")
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
 				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true);
 
@@ -284,7 +284,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithTitle($"{live.Member.Name} is live now!")
 				.WithDescription(live.Title)
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
-				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToLongTimeString()}   JST", "https://www.flaticon.com/svg/static/icons/svg/1384/1384060.svg")
+				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToShortTimeString()}", "https://png.pngtree.com/element_our/sm/20180301/sm_5a9797d5c93d3.jpg")
 				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true);
 
@@ -301,7 +301,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithDescription(live.Title)
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
 				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
-				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToLongTimeString()}   JST", "https://www.flaticon.com/svg/static/icons/svg/1384/1384060.svg")
+				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToShortTimeString()}", "https://png.pngtree.com/element_our/sm/20180301/sm_5a9797d5c93d3.jpg")
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
 				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true);
 
