@@ -23,6 +23,8 @@ namespace PekoBot.Entities.Models
 
 		public bool Reminded { get; set; } = false;
 
+		public bool Notified { get; set; } = false;
+
 	}
 
 	public enum Platform

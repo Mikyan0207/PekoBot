@@ -155,7 +155,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					if (live.StartAt - DateTime.Now > TimeSpan.FromHours(6))
 						continue;
 
-					if (live.StartAt - DateTime.Now < TimeSpan.FromSeconds(0))
+					if (live.StartAt - DateTime.Now <= TimeSpan.FromMinutes(1))
 						continue;
 
 					var e = await AddLiveAsync(live).ConfigureAwait(false);
@@ -195,8 +195,8 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 			foreach (var live in lives)
 			{
-				if (live.StartAt - DateTime.Now <= TimeSpan.FromMinutes(1) ||
-				    live.StartAt - DateTime.Now >= TimeSpan.FromMinutes(-5))
+				if ((live.StartAt - DateTime.Now <= TimeSpan.FromMinutes(1) ||
+				    live.StartAt - DateTime.Now >= TimeSpan.FromMinutes(-5)) && !live.Notified)
 				{
 					foreach (var channel in channels)
 					{
@@ -204,7 +204,8 @@ namespace PekoBot.Core.Modules.VTubers.Services
 							embed: CreateReminderEmbed(live)).ConfigureAwait(false);
 
 						Thread.Sleep(TimeSpan.FromSeconds(5));
-						await RemoveLiveAsync(live);
+						live.Notified = true;
+						await UpdateLiveAsync(live).ConfigureAwait(false);
 					}
 				}
 			}

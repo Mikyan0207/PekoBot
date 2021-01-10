@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PekoBot.Database;
 
 namespace PekoBot.Database.Migrations
 {
     [DbContext(typeof(PekoBotContext))]
-    partial class PekoBotContextModelSnapshot : ModelSnapshot
+    [Migration("20210110150251_NotificationCheck")]
+    partial class NotificationCheck
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
