@@ -125,7 +125,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 			}
 			catch (DbUpdateConcurrencyException e)
 			{
-				LogManager.GetCurrentClassLogger().Error(e);
+				Logger.Error(e);
 				throw;
 			}
 		}
@@ -139,21 +139,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 			}
 			catch (DbUpdateConcurrencyException e)
 			{
-				LogManager.GetCurrentClassLogger().Error(e);
-				throw;
-			}
-		}
-
-		private async Task RemoveLiveAsync(Live live)
-		{
-			try
-			{
-				Context.Remove(live);
-				await Context.SaveChangesAsync().ConfigureAwait(false);
-			}
-			catch (DbUpdateConcurrencyException e)
-			{
-				LogManager.GetCurrentClassLogger().Error(e);
+				Logger.Error(e);
 				throw;
 			}
 		}
@@ -162,12 +148,12 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			while (true)
 			{
-				Logger.Info("Checking scheduled lives...");
-
 				var apiResponse = await GetAsync(API_URL + SCHEDULED_LIVE_ENDPOINT).ConfigureAwait(false);
 				var lives = JsonConvert.DeserializeObject<HololiveLives>(apiResponse);
 				var channels = await Context.Channels.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
 					.ToListAsync().ConfigureAwait(false);
+
+				Logger.Info($"Checking scheduled {lives.TotalLives} lives...");
 
 				foreach (var live in lives.Lives)
 				{
@@ -202,8 +188,6 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			while (true)
 			{
-				Logger.Info("Checking reminder...");
-
 				var channels = await Context
 					.Channels
 					.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
@@ -212,8 +196,11 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 				var lives = await Context
 					.Lives
-					.Where(x => x.Reminded == false)
-					.ToListAsync().ConfigureAwait(false);
+					.Where(x => !x.Reminded)
+					.ToListAsync()
+					.ConfigureAwait(false);
+
+				Logger.Info($"Checking reminders for {lives.Count} lives...");
 
 				foreach (var live in lives.Where(live => (live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(15)))
 				{
@@ -237,8 +224,6 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			while (true)
 			{
-				Logger.Info("Checking current lives...");
-
 				var channels = await Context
 					.Channels
 					.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
@@ -247,11 +232,14 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 				var lives = await Context
 					.Lives
-					.Where(x => x.Reminded && !x.Notified)
+					.Where(x => !x.Notified)
 					.ToListAsync().ConfigureAwait(false);
+
+				Logger.Info($"Checking {lives.Count} current lives...");
 
 				foreach (var live in lives.Where(live => (live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(5)))
 				{
+					live.Reminded = true;
 					live.Notified = true;
 					await UpdateLiveAsync(live).ConfigureAwait(false);
 
