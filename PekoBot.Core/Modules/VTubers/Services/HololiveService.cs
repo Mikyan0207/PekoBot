@@ -213,7 +213,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					.Where(x => x.Reminded == false && x.Notified == false)
 					.ToListAsync().ConfigureAwait(false);
 
-				foreach (var live in lives.Where(live => (live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(30)))
+				foreach (var live in lives.Where(live => (live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(15)))
 				{
 					live.Reminded = true;
 					await UpdateLiveAsync(live).ConfigureAwait(false);
