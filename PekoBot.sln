@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PekoBot.Core", "PekoBot.Core\PekoBot.Core.csproj", "{1A7AB416-8C1E-46BD-B2ED-4399DCBCA387}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PekoBot.Database", "PekoBot.Database\PekoBot.Database.csproj", "{9896849F-55C1-4222-9983-A1CFE34B2D00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PekoBot.Database", "PekoBot.Database\PekoBot.Database.csproj", "{9896849F-55C1-4222-9983-A1CFE34B2D00}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PekoBot.Entities", "PekoBot.Entities\PekoBot.Entities.csproj", "{E09DFCF3-3178-432D-BDAD-9C07626EA235}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PekoBot.Entities", "PekoBot.Entities\PekoBot.Entities.csproj", "{E09DFCF3-3178-432D-BDAD-9C07626EA235}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

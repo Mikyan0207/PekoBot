@@ -1,12 +1,12 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 
 namespace PekoBot.Core
 {
-	class Program
+	internal static class Program
 	{
-		static void Main(string[] args)
+		private static async Task Main(string[] args)
 		{
-			Console.WriteLine("Hello World!");
+			await new PekoBot().RunAsync().ConfigureAwait(false);
 		}
 	}
 }
