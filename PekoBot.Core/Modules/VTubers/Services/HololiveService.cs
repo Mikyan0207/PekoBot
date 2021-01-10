@@ -17,6 +17,7 @@ using PekoBot.Core.Services.Impl;
 using PekoBot.Database;
 using PekoBot.Entities;
 using PekoBot.Entities.Models;
+using ChannelType = PekoBot.Entities.Models.ChannelType;
 using DiscordChannel = PekoBot.Entities.Models.DiscordChannel;
 
 namespace PekoBot.Core.Modules.VTubers.Services
@@ -49,7 +50,27 @@ namespace PekoBot.Core.Modules.VTubers.Services
 			HttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36");
 		}
 
-		public async Task<string> GetAsync(string url)
+		public Task RunHandlersAsync()
+		{
+			var t1 = Task.Run(async () =>
+			{
+				await HololiveScheduledLivesHandler().ConfigureAwait(false);
+			});
+
+			var t2 = Task.Run(async () =>
+			{
+				await HololiveReminderHandler().ConfigureAwait(false);
+			});
+
+			var t3 = Task.Run(async () =>
+			{
+				await HololiveCurrentLivesHandler().ConfigureAwait(false);
+			});
+
+			return Task.CompletedTask;
+		}
+
+		private static async Task<string> GetAsync(string url)
 		{
 			return await HttpClient.GetStringAsync(new Uri(url)).ConfigureAwait(false);
 		}
@@ -97,8 +118,6 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				}).ConfigureAwait(false);
 				await Context.SaveChangesAsync().ConfigureAwait(false);
 
-				LogManager.GetCurrentClassLogger().Info($"New live added. Id = {live.Id}");
-
 				return e.Entity;
 			}
 			catch (DbUpdateConcurrencyException e)
@@ -136,26 +155,31 @@ namespace PekoBot.Core.Modules.VTubers.Services
 			}
 		}
 
-		private async Task HololiveScheduledLivesHandler(List<DiscordChannel> channels)
+		private async Task HololiveScheduledLivesHandler()
 		{
-			var apiResponse = await GetAsync(API_URL + SCHEDULED_LIVE_ENDPOINT).ConfigureAwait(false);
-			var lives = JsonConvert.DeserializeObject<HololiveLives>(apiResponse);
-
-			foreach (var live in lives.Lives)
+			while (true)
 			{
-				var cachedLive = await GetLiveAsync(live.Id).ConfigureAwait(false);
+				LogManager.GetCurrentClassLogger().Info("[HololiveService] Checking scheduled lives...");
 
-				if (cachedLive == null)
+				var apiResponse = await GetAsync(API_URL + SCHEDULED_LIVE_ENDPOINT).ConfigureAwait(false);
+				var lives = JsonConvert.DeserializeObject<HololiveLives>(apiResponse);
+				var channels = await Context.Channels.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
+					.ToListAsync().ConfigureAwait(false);
+
+				foreach (var live in lives.Lives)
 				{
+					var cachedLive = await GetLiveAsync(live.Id).ConfigureAwait(false);
+
+					if (cachedLive != null)
+						continue;
+
 					var member = await GetMemberAsync(live.Channel).ConfigureAwait(false);
 
 					if (member == null)
 						continue;
-
-					if ((live.StartAt - DateTime.Now).Duration() > TimeSpan.FromHours(6))
+					if ((live.StartAt - DateTime.Now).Duration() >= TimeSpan.FromHours(6))
 						continue;
-
-					if ((live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(1))
+					if ((live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(5))
 						continue;
 
 					var e = await AddLiveAsync(live).ConfigureAwait(false);
@@ -168,36 +192,30 @@ namespace PekoBot.Core.Modules.VTubers.Services
 						Thread.Sleep(TimeSpan.FromSeconds(5));
 					}
 				}
-				else if ((cachedLive.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(30) && !cachedLive.Reminded)
-				{
-					var member = await GetMemberAsync(live.Channel).ConfigureAwait(false);
-
-					if (member == null)
-						continue;
-
-					cachedLive.Reminded = true;
-					await UpdateLiveAsync(cachedLive).ConfigureAwait(false);
-
-					foreach (var channel in channels)
-					{
-						await Client.SendMessageAsync(await Client.GetChannelAsync(channel.ChannelId),
-							embed: CreateReminderEmbed(cachedLive)).ConfigureAwait(false);
-
-						Thread.Sleep(TimeSpan.FromSeconds(5));
-					}
-				}
+				Thread.Sleep(TimeSpan.FromMinutes(30));
 			}
 		}
 
-		private async Task HololiveCurrentLivesHandler(List<DiscordChannel> channels)
+		private async Task HololiveReminderHandler()
 		{
-			var lives = await Context.Lives.ToListAsync().ConfigureAwait(false);
-
-			foreach (var live in lives)
+			while (true)
 			{
-				if ((live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(1) && !live.Notified)
+				LogManager.GetCurrentClassLogger().Info("[HololiveService] Reminder check...");
+
+				var channels = await Context
+					.Channels
+					.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
+					.ToListAsync()
+					.ConfigureAwait(false);
+
+				var lives = await Context
+					.Lives
+					.Where(x => x.Reminded == false && x.Notified == false)
+					.ToListAsync().ConfigureAwait(false);
+
+				foreach (var live in lives.Where(live => (live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(30)))
 				{
-					live.Notified = true;
+					live.Reminded = true;
 					await UpdateLiveAsync(live).ConfigureAwait(false);
 
 					foreach (var channel in channels)
@@ -208,24 +226,40 @@ namespace PekoBot.Core.Modules.VTubers.Services
 						Thread.Sleep(TimeSpan.FromSeconds(5));
 					}
 				}
+
+				Thread.Sleep(TimeSpan.FromMinutes(15));
 			}
 		}
 
-		public async Task HololiveNotificationsHandler()
+		private async Task HololiveCurrentLivesHandler()
 		{
-			var channels = await GetNotificationsChannelsAsync().ConfigureAwait(false);
-
 			while (true)
 			{
-				await HololiveScheduledLivesHandler(channels).ConfigureAwait(false);
-				Thread.Sleep(TimeSpan.FromSeconds(5));
-				await HololiveCurrentLivesHandler(channels).ConfigureAwait(false);
+				LogManager.GetCurrentClassLogger().Info("[HololiveService] Checking current lives...");
 
-				Thread.Sleep(TimeSpan.FromMinutes(30));
+				var channels = await Context.Channels.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
+					.ToListAsync().ConfigureAwait(false);
+				var lives = await Context.Lives.ToListAsync().ConfigureAwait(false);
+
+				foreach (var live in lives.Where(live => (live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(5) && !live.Notified))
+				{
+					live.Notified = true;
+					await UpdateLiveAsync(live).ConfigureAwait(false);
+
+					foreach (var channel in channels)
+					{
+						await Client.SendMessageAsync(await Client.GetChannelAsync(channel.ChannelId),
+							embed: LiveNotificationEmbed(live)).ConfigureAwait(false);
+
+						Thread.Sleep(TimeSpan.FromSeconds(5));
+					}
+				}
+
+				Thread.Sleep(TimeSpan.FromMinutes(15));
 			}
 		}
 
-		public DiscordEmbed CreateNotificationEmbed(Live live)
+		private static DiscordEmbed CreateNotificationEmbed(Live live)
 		{
 			var t = (live.StartAt - DateTime.Now).Duration();
 			var embed = new DiscordEmbedBuilder()
@@ -235,13 +269,14 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithDescription(live.Title)
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
 				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
+				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToLongTimeString()}   JST", "https://www.flaticon.com/svg/static/icons/svg/1384/1384060.svg")
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
 				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true);
 
 			return embed.Build();
 		}
 
-		public DiscordEmbed LiveNotificationEmbed(Live live)
+		private static DiscordEmbed LiveNotificationEmbed(Live live)
 		{
 			var embed = new DiscordEmbedBuilder()
 				.WithColor(DiscordColor.Red)
@@ -249,13 +284,14 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithTitle($"{live.Member.Name} is live now!")
 				.WithDescription(live.Title)
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
+				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToLongTimeString()}   JST", "https://www.flaticon.com/svg/static/icons/svg/1384/1384060.svg")
 				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true);
 
 			return embed.Build();
 		}
 
-		public DiscordEmbed CreateReminderEmbed(Live live)
+		private static DiscordEmbed CreateReminderEmbed(Live live)
 		{
 			var t = (live.StartAt - DateTime.Now).Duration();
 			var embed = new DiscordEmbedBuilder()
@@ -265,6 +301,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithDescription(live.Title)
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
 				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
+				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToLongTimeString()}   JST", "https://www.flaticon.com/svg/static/icons/svg/1384/1384060.svg")
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
 				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true);
 

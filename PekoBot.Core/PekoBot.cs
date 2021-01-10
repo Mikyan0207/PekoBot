@@ -72,7 +72,7 @@ namespace PekoBot.Core
 		{
 			await Client.ConnectAsync().ConfigureAwait(false);
 
-			await Services.GetService<HololiveService>().HololiveNotificationsHandler().ConfigureAwait(false);
+			await Services.GetService<HololiveService>().RunHandlersAsync().ConfigureAwait(false);
 
             await Task.Delay(-1).ConfigureAwait(false);
 		}
