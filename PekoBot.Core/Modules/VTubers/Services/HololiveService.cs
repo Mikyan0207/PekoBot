@@ -216,6 +216,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 				var lives = await ctx
 					.Lives
+					.Include(x => x.Member)
 					.Where(x => !x.Reminded)
 					.ToListAsync()
 					.ConfigureAwait(false);
@@ -254,6 +255,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 				var lives = await ctx
 					.Lives
+					.Include(x => x.Member)
 					.Where(x => !x.Notified)
 					.ToListAsync()
 					.ConfigureAwait(false);
