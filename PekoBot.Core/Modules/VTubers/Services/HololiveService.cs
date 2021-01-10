@@ -14,6 +14,7 @@ using NLog.Fluent;
 using PekoBot.Core.Modules.VTubers.Common;
 using PekoBot.Core.Services;
 using PekoBot.Core.Services.Impl;
+using PekoBot.Database;
 using PekoBot.Entities;
 using PekoBot.Entities.Models;
 using DiscordChannel = PekoBot.Entities.Models.DiscordChannel;
@@ -30,12 +31,14 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		private static HttpClient HttpClient { get; set; }
 
 		private DbService DbService { get; }
+		private PekoBotContext Context { get; }
 
 		private DiscordClient Client { get; }
 
 		public HololiveService(DbService dbService, DiscordClient client)
 		{
 			DbService = dbService;
+			Context = DbService.GetContext();
 			Client = client;
 
 			HttpClient = new HttpClient(new HttpClientHandler()
@@ -53,8 +56,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 		private async Task<Member> GetMemberAsync(string channelId)
 		{
-			return await DbService
-				.GetContext()
+			return await Context
 				.Members
 				.FirstOrDefaultAsync(x => x.YoutubeId == channelId)
 				.ConfigureAwait(false);
@@ -62,8 +64,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 		private async Task<Live> GetLiveAsync(int liveId)
 		{
-			return await DbService
-				.GetContext()
+			return await Context
 				.Lives
 				.FirstOrDefaultAsync(x => x.LiveId == liveId)
 				.ConfigureAwait(false);
@@ -71,8 +72,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 		private async Task<List<DiscordChannel>> GetNotificationsChannelsAsync()
 		{
-			return await DbService
-				.GetContext()
+			return await Context
 				.Channels
 				.Where(x => x.ChannelType == Entities.Models.ChannelType.HololiveNotifications)
 				.ToListAsync()
@@ -83,7 +83,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			try
 			{
-				var e = await DbService.GetContext().AddAsync(new Live()
+				var e = await Context.AddAsync(new Live()
 				{
 					LiveId = live.Id,
 					Title = live.Title,
@@ -95,7 +95,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					Member = await GetMemberAsync(live.Channel).ConfigureAwait(false),
 					Reminded = false
 				}).ConfigureAwait(false);
-				await DbService.GetContext().SaveChangesAsync().ConfigureAwait(false);
+				await Context.SaveChangesAsync().ConfigureAwait(false);
 
 				LogManager.GetCurrentClassLogger().Info($"New live added. Id = {live.Id}");
 
@@ -112,24 +112,22 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			try
 			{
-				DbService.GetContext().Update(live);
-				await DbService.GetContext().SaveChangesAsync().ConfigureAwait(false);
+				Context.Update(live);
+				await Context.SaveChangesAsync().ConfigureAwait(false);
 			}
 			catch (DbUpdateConcurrencyException e)
 			{
 				LogManager.GetCurrentClassLogger().Error(e);
 				throw;
 			}
-			DbService.GetContext().Update(live);
-			await DbService.GetContext().SaveChangesAsync().ConfigureAwait(false);
 		}
 
 		private async Task RemoveLiveAsync(Live live)
 		{
 			try
 			{
-				DbService.GetContext().Remove(live);
-				await DbService.GetContext().SaveChangesAsync().ConfigureAwait(false);
+				Context.Remove(live);
+				await Context.SaveChangesAsync().ConfigureAwait(false);
 			}
 			catch (DbUpdateConcurrencyException e)
 			{
@@ -189,12 +187,11 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					}
 				}
 			}
-
 		}
 
 		private async Task HololiveCurrentLivesHandler(List<DiscordChannel> channels)
 		{
-			var lives = await DbService.GetContext().Lives.ToListAsync().ConfigureAwait(false);
+			var lives = await Context.Lives.ToListAsync().ConfigureAwait(false);
 
 			foreach (var live in lives)
 			{
@@ -238,7 +235,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
 				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
-				.AddField("Start in", t.ToString("c"), true);
+				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true);
 
 			return embed.Build();
 		}
@@ -269,7 +266,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
 				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
-				.AddField("Start in", t.ToString("c"), true);
+				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true);
 
 			return embed.Build();
 		}
