@@ -232,7 +232,6 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 				var lives = await Context
 					.Lives
-					.Where(x => !x.Notified)
 					.ToListAsync().ConfigureAwait(false);
 
 				Logger.Info($"Checking {lives.Count} current lives...");
