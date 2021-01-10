@@ -67,7 +67,15 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 			var t3 = Task.Run(async () =>
 			{
-				await HololiveCurrentLivesHandler().ConfigureAwait(false);
+				try
+				{
+					await HololiveCurrentLivesHandler().ConfigureAwait(false);
+				}
+				catch (Exception e)
+				{
+					Logger.Error(e);
+					throw;
+				}
 			});
 
 			return Task.CompletedTask;
@@ -80,7 +88,8 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 		private async Task<Member> GetMemberAsync(string channelId)
 		{
-			return await Context
+			return await DbService
+				.GetContext()
 				.Members
 				.FirstOrDefaultAsync(x => x.YoutubeId == channelId)
 				.ConfigureAwait(false);
@@ -88,7 +97,8 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 		private async Task<Live> GetLiveAsync(int liveId)
 		{
-			return await Context
+			return await DbService
+				.GetContext()
 				.Lives
 				.FirstOrDefaultAsync(x => x.LiveId == liveId)
 				.ConfigureAwait(false);
@@ -96,7 +106,8 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 		private async Task<List<DiscordChannel>> GetNotificationsChannelsAsync()
 		{
-			return await Context
+			return await DbService
+				.GetContext()
 				.Channels
 				.Where(x => x.ChannelType == Entities.Models.ChannelType.HololiveNotifications)
 				.ToListAsync()
@@ -107,7 +118,9 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			try
 			{
-				var e = await Context.AddAsync(new Live()
+				var ctx = DbService.GetContext();
+
+				var e = await ctx.AddAsync(new Live()
 				{
 					LiveId = live.Id,
 					Title = live.Title,
@@ -119,7 +132,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					Member = await GetMemberAsync(live.Channel).ConfigureAwait(false),
 					Reminded = false
 				}).ConfigureAwait(false);
-				await Context.SaveChangesAsync().ConfigureAwait(false);
+				await ctx.SaveChangesAsync().ConfigureAwait(false);
 
 				return e.Entity;
 			}
@@ -134,8 +147,10 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			try
 			{
-				Context.Update(live);
-				await Context.SaveChangesAsync().ConfigureAwait(false);
+				var ctx = DbService.GetContext();
+				
+				ctx.Update(live);
+				await ctx.SaveChangesAsync().ConfigureAwait(false);
 			}
 			catch (DbUpdateConcurrencyException e)
 			{
@@ -150,8 +165,12 @@ namespace PekoBot.Core.Modules.VTubers.Services
 			{
 				var apiResponse = await GetAsync(API_URL + SCHEDULED_LIVE_ENDPOINT).ConfigureAwait(false);
 				var lives = JsonConvert.DeserializeObject<HololiveLives>(apiResponse);
-				var channels = await Context.Channels.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
-					.ToListAsync().ConfigureAwait(false);
+				var channels = await DbService
+					.GetContext()
+					.Channels
+					.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
+					.ToListAsync()
+					.ConfigureAwait(false);
 
 				Logger.Info($"Checking scheduled {lives.TotalLives} lives...");
 
@@ -188,13 +207,14 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			while (true)
 			{
-				var channels = await Context
+				var ctx = DbService.GetContext();
+				var channels = await ctx
 					.Channels
 					.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
 					.ToListAsync()
 					.ConfigureAwait(false);
 
-				var lives = await Context
+				var lives = await ctx
 					.Lives
 					.Where(x => !x.Reminded)
 					.ToListAsync()
@@ -202,7 +222,8 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 				Logger.Info($"Checking reminders for {lives.Count} lives...");
 
-				foreach (var live in lives.Where(live => (live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(15)))
+				foreach (var live in lives.Where(live => (live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(15)
+				                                         && (live.StartAt - DateTime.Now).Duration() >= TimeSpan.FromMinutes(5)))
 				{
 					live.Reminded = true;
 					await UpdateLiveAsync(live).ConfigureAwait(false);
@@ -224,15 +245,18 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			while (true)
 			{
-				var channels = await Context
+				var ctx = DbService.GetContext();
+				var channels = await ctx
 					.Channels
 					.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
 					.ToListAsync()
 					.ConfigureAwait(false);
 
-				var lives = await Context
+				var lives = await ctx
 					.Lives
-					.ToListAsync().ConfigureAwait(false);
+					.Where(x => !x.Notified)
+					.ToListAsync()
+					.ConfigureAwait(false);
 
 				Logger.Info($"Checking {lives.Count} current lives...");
 
