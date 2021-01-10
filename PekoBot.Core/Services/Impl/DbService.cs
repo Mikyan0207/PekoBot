@@ -280,6 +280,336 @@ namespace PekoBot.Core.Services.Impl
 				context.SaveChanges();
 			}
 
+			if (context.Members.FirstOrDefault(x => x.Name == "不知火フレア") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "不知火フレア",
+					YoutubeId = "UCvInZx9h3jC2JzsIzoOebWg",
+					YoutubeName = "Flare Ch. 不知火フレア",
+					YoutubeUrl = "https://www.youtube.com/channel/UCvInZx9h3jC2JzsIzoOebWg",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwngtkUgGkgWTz57Er3GSzuMUR07HISM_yDhKQFnR_A=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "白銀ノエル") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "白銀ノエル",
+					YoutubeId = "UCdyqAaZDKHXg4Ahi7VENThQ",
+					YoutubeName = "Noel Ch. 白銀ノエル",
+					YoutubeUrl = "https://www.youtube.com/channel/UCdyqAaZDKHXg4Ahi7VENThQ",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnijLF2X1YBVQo3rClt7ub29cYM7OzpmRmliaGbw=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "天音かなた") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "天音かなた",
+					YoutubeId = "UCZlDXzGoo7d44bwdNObFacg",
+					YoutubeName = "Kanata Ch. 天音かなた",
+					YoutubeUrl = "https://www.youtube.com/channel/UCZlDXzGoo7d44bwdNObFacg",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwniXUgLD1FepLsMoqO7HnhlgwbxGmPeqKWGv1JsO=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "桐生ココ") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "桐生ココ",
+					YoutubeId = "UCS9uQI-jC3DE0L4IpXyvr6w",
+					YoutubeName = "Coco Ch. 桐生ココ",
+					YoutubeUrl = "https://www.youtube.com/channel/UCS9uQI-jC3DE0L4IpXyvr6w",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwniPku-5QatVce_BIjIeBxT5rj9lrTlCpXCvEWa7=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "角巻わため") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "角巻わため",
+					YoutubeId = "UCqm3BQLlJfvkTsX_hvm0UmA",
+					YoutubeName = "Watame Ch. 角巻わため",
+					YoutubeUrl = "https://www.youtube.com/channel/UCqm3BQLlJfvkTsX_hvm0UmA",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnitWcmmZK60TDG8y5aUeQfZlmH9YlBNJ4D1ZSFI=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "常闇トワ") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "常闇トワ",
+					YoutubeId = "UC1uv2Oq6kNxgATlCiez59hw",
+					YoutubeName = "Towa Ch. 常闇トワ",
+					YoutubeUrl = "https://www.youtube.com/channel/UC1uv2Oq6kNxgATlCiez59hw",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnjPaiimZva5GECAyNDn0qraqPm62LlH-0oN21I5=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "姫森ルーナ") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "姫森ルーナ",
+					YoutubeId = "UCa9Y57gfeY0Zro_noHRVrnw",
+					YoutubeName = "Luna Ch. 姫森ルーナ",
+					YoutubeUrl = "https://www.youtube.com/channel/UCa9Y57gfeY0Zro_noHRVrnw",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnh8JcbM8f3Zvl9eszRVnuqrAF3bjQIEjuOPdBR2=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "雪花ラミィ") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "雪花ラミィ",
+					YoutubeId = "UCFKOVgVbGmX65RxO3EtH3iw",
+					YoutubeName = "Lamy Ch. 雪花ラミィ",
+					YoutubeUrl = "https://www.youtube.com/channel/UCFKOVgVbGmX65RxO3EtH3iw",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwng8eQJdCX3r4RgCmRGwigXkDp9a2JJSPq-dZcMF=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "桃鈴ねね") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "桃鈴ねね",
+					YoutubeId = "UCAWSyEs_Io8MtpY3m-zqILA",
+					YoutubeName = "Nene Ch.桃鈴ねね",
+					YoutubeUrl = "https://www.youtube.com/channel/UCAWSyEs_Io8MtpY3m-zqILA",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnim3rUS3EhZrGARcbATumWxnrCAjo8ovmgXT2tm=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "獅白ぼたん") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "獅白ぼたん",
+					YoutubeId = "UCUKD-uaobj9jiqB-VXt71mA",
+					YoutubeName = "Botan Ch.獅白ぼたん",
+					YoutubeUrl = "https://www.youtube.com/channel/UCUKD-uaobj9jiqB-VXt71mA",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwngRC-JqguPnj9ljVH3UulyfdlyQzLYzLeSrhvD6=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "尾丸ポルカ") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "尾丸ポルカ",
+					YoutubeId = "UCK9V2B22uJYu3N7eR_BT9QA",
+					YoutubeName = "Polka Ch. 尾丸ポルカ",
+					YoutubeUrl = "https://www.youtube.com/channel/UCK9V2B22uJYu3N7eR_BT9QA",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwni13e9pDow2afsp2f5CBPehEvYhFApFZoHaJWLu=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "Ayunda Risu") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "Ayunda Risu",
+					YoutubeId = "UCOyYb1c43VlX9rc_lT6NKQw",
+					YoutubeName = "Ayunda Risu Ch. hololive-ID",
+					YoutubeUrl = "https://www.youtube.com/channel/UCOyYb1c43VlX9rc_lT6NKQw",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwniS_ftaXhqYt1SQPjyuFx5MD_-v0fIUkbCTq5Q_gg=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "Moona Hoshinova") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "Moona Hoshinova",
+					YoutubeId = "UCP0BspO_AMEe3aQqqpo89Dg",
+					YoutubeName = "Moona Hoshinova hololive-ID",
+					YoutubeUrl = "https://www.youtube.com/channel/UCP0BspO_AMEe3aQqqpo89Dg",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnj-XzL4TRZCzwo-7FCmdsTikQo9wMZwz9RGNoT0XA=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "Airani Iofifteen") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "Airani Iofifteen",
+					YoutubeId = "UCAoy6rzhSf4ydcYjJw3WoVg",
+					YoutubeName = "Airani Iofifteen Channel hololive-ID",
+					YoutubeUrl = "https://www.youtube.com/channel/UCAoy6rzhSf4ydcYjJw3WoVg",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnh4NDjjjUAfPj8Aa4kjyQb4C85KzMWobSCaso-8=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "小鳥遊キアラ") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "小鳥遊キアラ",
+					YoutubeId = "UCHsx4Hqa-1ORjQTh9TYDhww",
+					YoutubeName = "Takanashi Kiara Ch. hololive-EN",
+					YoutubeUrl = "https://www.youtube.com/channel/UCHsx4Hqa-1ORjQTh9TYDhww",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnicJ682cy4GKD-ulxRnE2jOuihNWCULnqW2caej=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "森美声") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "森美声",
+					YoutubeId = "UCL_qhgtOy0dy1Agp8vkySQg",
+					YoutubeName = "Mori Calliope Ch. hololive-EN",
+					YoutubeUrl = "https://www.youtube.com/channel/UCL_qhgtOy0dy1Agp8vkySQg",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwngcfBYiWbxJXhxC2rtEk-2Uj_BrlQ0FNBdZblJn=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "一伊那尓栖") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "一伊那尓栖",
+					YoutubeId = "UCMwGHR0BTZuLsmjY_NT5Pwg",
+					YoutubeName = "Ninomae Ina'nis Ch. hololive-EN",
+					YoutubeUrl = "https://www.youtube.com/channel/UCMwGHR0BTZuLsmjY_NT5Pwg",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwng37V0l-NwF3bu7QA4XmOP5EZFwk5zJE-78OHP9=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "がうる・ぐら") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "がうる・ぐら",
+					YoutubeId = "UCoSrY_IQQVpmIRZ9Xf-y93g",
+					YoutubeName = "Gawr Gura Ch. hololive-EN",
+					YoutubeUrl = "https://www.youtube.com/channel/UCoSrY_IQQVpmIRZ9Xf-y93g",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnhSSaF3Q-PyyTSis4EH6Cu8FZ32LNvkxI9Gl_rn=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "ワトソン・アメリア") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "ワトソン・アメリア",
+					YoutubeId = "UCyl1z3jo3XHR1riLFKG5UAg",
+					YoutubeName = "Watson Amelia Ch. hololive-EN",
+					YoutubeUrl = "https://www.youtube.com/channel/UCyl1z3jo3XHR1riLFKG5UAg",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwngENhxNHPzV4jjip28G3vswMxutvkaBhBjAMS0i=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "クレイジー・オリー") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "クレイジー・オリー",
+					YoutubeId = "UCYz_5n-uDuChHtLo7My1HnQ",
+					YoutubeName = "Kureiji Ollie Ch. hololive-ID",
+					YoutubeUrl = "https://www.youtube.com/channel/UCYz_5n-uDuChHtLo7My1HnQ",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnitFviHjDNyLPjA95sz4Supbhvm8Ea3dKrRAKk=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "アーニャ・メルフィッサ") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "アーニャ・メルフィッサ",
+					YoutubeId = "UC727SQYUvx5pDDGQpTICNWg",
+					YoutubeName = "Anya Melfissa Ch. hololive-ID",
+					YoutubeUrl = "https://www.youtube.com/channel/UC727SQYUvx5pDDGQpTICNWg",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnie9uw8oBbjgTKmoLPSo9b_K0AbNPRbD2rjCApl=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
+			if (context.Members.FirstOrDefault(x => x.Name == "パヴォリア・レイネ") == null)
+			{
+				context.Members.Add(new Member
+				{
+					Name = "パヴォリア・レイネ",
+					YoutubeId = "UChgTyjG-pdNvxxhdsXfHQ5Q",
+					YoutubeName = "Pavolia Reine Ch. hololive-ID",
+					YoutubeUrl = "https://www.youtube.com/channel/UChgTyjG-pdNvxxhdsXfHQ5Q",
+					YoutubeAvatarUrl =
+						"https://yt3.ggpht.com/ytc/AAUvwnjXvzYgBg5mJv8RZLZhgn0-Zb_4zzE1zhCHrJ2w=s88-c-k-c0x00ffffff-no-rj"
+				});
+
+				context.SaveChanges();
+			}
+
 			if (context.Channels.FirstOrDefault(x => x.ChannelId == 797092264030896138) == null)
 			{
 				context.Channels.Add(new DiscordChannel()
