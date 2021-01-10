@@ -82,7 +82,7 @@ namespace PekoBot.Core
             var loggingConfig = new LoggingConfiguration();
             var coloredConsoleTarget = new ColoredConsoleTarget()
             {
-                Layout = "[${logger:shortName=true}] - ${shortdate}\n${message}\n"
+                Layout = "[${logger:shortName=true}] - ${longdate}\n${message}\n"
             };
 
             loggingConfig.AddTarget("Console", coloredConsoleTarget);
