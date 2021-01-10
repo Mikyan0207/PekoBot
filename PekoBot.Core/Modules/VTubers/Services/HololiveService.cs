@@ -194,7 +194,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					}
 				}
 
-				Thread.Sleep(TimeSpan.FromMinutes(30));
+				await Task.Delay(TimeSpan.FromMinutes(30));
 			}
 		}
 
@@ -229,7 +229,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					}
 				}
 
-				Thread.Sleep(TimeSpan.FromMinutes(15));
+				await Task.Delay(TimeSpan.FromMinutes(15));
 			}
 		}
 
@@ -264,7 +264,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					}
 				}
 
-				Thread.Sleep(TimeSpan.FromMinutes(5));
+				await Task.Delay(TimeSpan.FromMinutes(5));
 			}
 		}
 
