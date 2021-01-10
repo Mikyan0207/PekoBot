@@ -179,8 +179,6 @@ namespace PekoBot.Core.Modules.VTubers.Services
 						continue;
 					if ((live.StartAt - DateTime.Now).Duration() >= TimeSpan.FromHours(6))
 						continue;
-					if ((live.StartAt - DateTime.Now).Duration() <= TimeSpan.FromMinutes(5))
-						continue;
 
 					var e = await AddLiveAsync(live).ConfigureAwait(false);
 
@@ -255,7 +253,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					}
 				}
 
-				Thread.Sleep(TimeSpan.FromMinutes(15));
+				Thread.Sleep(TimeSpan.FromMinutes(10));
 			}
 		}
 
