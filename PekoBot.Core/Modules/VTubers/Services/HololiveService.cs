@@ -12,20 +12,16 @@ using NLog;
 using PekoBot.Core.Modules.VTubers.Common;
 using PekoBot.Core.Services;
 using PekoBot.Core.Services.Impl;
-using PekoBot.Database;
 using PekoBot.Entities;
 using PekoBot.Entities.Models;
-using ChannelType = PekoBot.Entities.Models.ChannelType;
-using DiscordChannel = PekoBot.Entities.Models.DiscordChannel;
+using ChannelType = PekoBot.Entities.Enums.ChannelType;
 
 namespace PekoBot.Core.Modules.VTubers.Services
 {
 	public class HololiveService : IService
 	{
 		private static readonly string API_URL = "https://holo.dev/api/v1/";
-		private static readonly string CURRENT_LIVE_ENDPOINT = "lives/current";
 		private static readonly string SCHEDULED_LIVE_ENDPOINT = "lives/scheduled";
-		private static readonly string ENDED_LIVE_ENDPOINT = "lives/ended";
 
 		private static HttpClient HttpClient { get; set; }
 
@@ -119,7 +115,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			using var uow = DbService.GetUnitOfWork();
 
-			return await uow.Lives.GetAsync(liveId).ConfigureAwait(false);
+			return await uow.Lives.GetLiveByIdAsync(liveId).ConfigureAwait(false);
 		}
 
 		private async Task<Live> AddLiveAsync(HololiveLive live)
@@ -138,7 +134,6 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					Room = live.Room,
 					Platform = live.Platform == "youtube" ? Platform.Youtube : Platform.Other,
 					Member = await uow.Members.GetByChannelIdAsync(live.Channel).ConfigureAwait(false),
-					Reminded = false,
 					Notified = false
 				};
 
@@ -166,7 +161,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				var channels = await DbService
 					.GetContext()
 					.Channels
-					.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
+					.Where(x => x.ChannelType == ChannelType.Hololive)
 					.ToListAsync()
 					.ConfigureAwait(false);
 
@@ -211,7 +206,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				var ctx = DbService.GetContext();
 				var channels = await ctx
 					.Channels
-					.Where(x => x.ChannelType == ChannelType.HololiveNotifications)
+					.Where(x => x.ChannelType == ChannelType.Hololive)
 					.ToListAsync()
 					.ConfigureAwait(false);
 
@@ -226,7 +221,6 @@ namespace PekoBot.Core.Modules.VTubers.Services
 
 				foreach (var live in lives.Where(live => (live.StartAt - DateTime.UtcNow).Duration() <= TimeSpan.FromMinutes(5)))
 				{
-					live.Reminded = true;
 					live.Notified = true;
 
 					using var uow = DbService.GetUnitOfWork();
@@ -254,7 +248,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithTitle($"{live.Member.Name} scheduled a new live")
 				.WithDescription(live.Title)
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
-				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
+				.WithAuthor(live.Member.Name, $"https://www.youtube.com/channel/{live.Member.YoutubeId}", live.Member.AvatarUrl)
 				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToShortTimeString()}", "https://png.pngtree.com/element_our/sm/20180301/sm_5a9797d5c93d3.jpg")
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
 				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true);
@@ -272,7 +266,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 				.WithDescription(live.Title)
 				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
 				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToShortTimeString()}", "https://png.pngtree.com/element_our/sm/20180301/sm_5a9797d5c93d3.jpg")
-				.WithAuthor(live.Member.YoutubeName, live.Member.YoutubeUrl, live.Member.YoutubeAvatarUrl)
+				.WithAuthor(live.Member.Name, $"https://www.youtube.com/channel/{live.Member.YoutubeId}", live.Member.AvatarUrl)
 				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
 				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true)
 				.AddField("Mentions", "", false);

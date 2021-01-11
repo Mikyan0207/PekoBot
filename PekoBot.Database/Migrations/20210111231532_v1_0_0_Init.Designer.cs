@@ -9,8 +9,8 @@ using PekoBot.Database;
 namespace PekoBot.Database.Migrations
 {
     [DbContext(typeof(PekoBotContext))]
-    [Migration("20210110150251_NotificationCheck")]
-    partial class NotificationCheck
+    [Migration("20210111231532_v1_0_0_Init")]
+    partial class v1_0_0_Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,10 +18,12 @@ namespace PekoBot.Database.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.1");
 
-            modelBuilder.Entity("PekoBot.Entities.Models.DiscordChannel", b =>
+            modelBuilder.Entity("PekoBot.Entities.Models.Channel", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
                     b.Property<ulong>("ChannelId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ChannelName")
@@ -30,22 +32,37 @@ namespace PekoBot.Database.Migrations
                     b.Property<int>("ChannelType")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ChannelId");
+                    b.HasKey("Id");
 
                     b.ToTable("Channels");
                 });
 
+            modelBuilder.Entity("PekoBot.Entities.Models.Company", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
+                });
+
             modelBuilder.Entity("PekoBot.Entities.Models.Live", b =>
                 {
-                    b.Property<int>("LiveId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Cover")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("LiveId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("MemberId")
                         .HasColumnType("TEXT");
@@ -54,9 +71,6 @@ namespace PekoBot.Database.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Platform")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("Reminded")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Room")
@@ -68,7 +82,7 @@ namespace PekoBot.Database.Migrations
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("LiveId");
+                    b.HasKey("Id");
 
                     b.HasIndex("MemberId");
 
@@ -80,24 +94,54 @@ namespace PekoBot.Database.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("AvatarUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CompanyId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("YoutubeAvatarUrl")
+                    b.Property<string>("Nicknames")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RoleId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("YoutubeId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("YoutubeName")
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("RoleId")
+                        .IsUnique();
+
+                    b.ToTable("Members");
+                });
+
+            modelBuilder.Entity("PekoBot.Entities.Models.Role", b =>
+                {
+                    b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("YoutubeUrl")
+                    b.Property<string>("Color")
                         .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<ulong>("RoleId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RoleType")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.ToTable("Roles");
                 });
 
             modelBuilder.Entity("PekoBot.Entities.Models.Live", b =>
@@ -106,6 +150,31 @@ namespace PekoBot.Database.Migrations
                         .WithMany()
                         .HasForeignKey("MemberId");
 
+                    b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("PekoBot.Entities.Models.Member", b =>
+                {
+                    b.HasOne("PekoBot.Entities.Models.Company", "Company")
+                        .WithMany("Members")
+                        .HasForeignKey("CompanyId");
+
+                    b.HasOne("PekoBot.Entities.Models.Role", "Role")
+                        .WithOne("Member")
+                        .HasForeignKey("PekoBot.Entities.Models.Member", "RoleId");
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("PekoBot.Entities.Models.Company", b =>
+                {
+                    b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("PekoBot.Entities.Models.Role", b =>
+                {
                     b.Navigation("Member");
                 });
 #pragma warning restore 612, 618

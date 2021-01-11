@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PekoBot.Entities.Models
 {
 	public class Live
 	{
-		[Key] public int LiveId { get; set; }
+		[Key]
+		public string Id { get; set; } = Guid.NewGuid().ToString();
+
+		public int LiveId { get; set; }
 
 		public string Title { get; set; }
 
@@ -21,10 +25,7 @@ namespace PekoBot.Entities.Models
 
 		public Member Member { get; set; }
 
-		public bool Reminded { get; set; } = false;
-
 		public bool Notified { get; set; } = false;
-
 	}
 
 	public enum Platform

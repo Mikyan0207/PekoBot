@@ -3,8 +3,8 @@ using PekoBot.Entities.Models;
 
 namespace PekoBot.Database.Repositories.Interfaces
 {
-	public interface IMemberRepository : IRepository<Member>
+	public interface IChannelRepository : IRepository<Channel>
 	{
-		public Task<Member> GetByChannelIdAsync(string channelId);
+		public Task<Channel> GetChannelById(ulong channelId);
 	}
 }

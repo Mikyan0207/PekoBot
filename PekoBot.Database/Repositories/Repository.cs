@@ -23,27 +23,7 @@ namespace PekoBot.Database.Repositories
 			return Set.Find(id);
 		}
 
-		public T Get(int id)
-		{
-			return Set.Find(id);
-		}
-
-		public T Get(ulong id)
-		{
-			return Set.Find(id);
-		}
-
 		public async Task<T> GetAsync(string id)
-		{
-			return await Set.FindAsync(id).ConfigureAwait(false);
-		}
-
-		public async Task<T> GetAsync(int id)
-		{
-			return await Set.FindAsync(id).ConfigureAwait(false);
-		}
-
-		public async Task<T> GetAsync(ulong id)
 		{
 			return await Set.FindAsync(id).ConfigureAwait(false);
 		}
@@ -58,9 +38,11 @@ namespace PekoBot.Database.Repositories
 			Set.Add(entity);
 		}
 
-		public async Task AddAsync(T entity)
+		public async Task<T> AddAsync(T entity)
 		{
-			await Set.AddAsync(entity).ConfigureAwait(false);
+			var e = await Set.AddAsync(entity).ConfigureAwait(false);
+
+			return e.Entity;
 		}
 
 		public void AddRange(IEnumerable<T> entities)

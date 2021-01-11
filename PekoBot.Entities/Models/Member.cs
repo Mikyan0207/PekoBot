@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PekoBot.Entities.Models
 {
@@ -10,12 +11,17 @@ namespace PekoBot.Entities.Models
 
 		public string Name { get; set; }
 
+		public string[] Nicknames { get; set; }
+
 		public string YoutubeId { get; set; }
 
-		public string YoutubeName { get; set; }
+		public string AvatarUrl { get; set; }
 
-		public string YoutubeUrl { get; set; }
+		public Company Company { get; set; }
 
-		public string YoutubeAvatarUrl { get; set; }
+		[ForeignKey("RoleId")]
+		public Role Role { get; set; }
+
+		public string RoleId { get; set; }
 	}
 }

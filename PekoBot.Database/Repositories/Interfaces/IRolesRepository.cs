@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
-using PekoBot.Entities;
 using PekoBot.Entities.Models;
 
 namespace PekoBot.Database.Repositories.Interfaces
 {
-	public interface ILiveRepository : IRepository<Live>
+	public interface IRolesRepository : IRepository<Role>
 	{
-		public Task<Live> GetLiveByIdAsync(int id);
+		public Task<Role> GetRoleByIdAsync(ulong id);
 	}
 }

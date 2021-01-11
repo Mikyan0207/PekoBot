@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
-using PekoBot.Entities;
+using PekoBot.Entities.Json;
 
 namespace PekoBot.Core.Services.Impl
 {

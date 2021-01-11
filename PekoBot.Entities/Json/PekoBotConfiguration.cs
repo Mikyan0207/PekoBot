@@ -1,4 +1,4 @@
-﻿namespace PekoBot.Entities
+﻿namespace PekoBot.Entities.Json
 {
 	public class PekoBotConfiguration
 	{

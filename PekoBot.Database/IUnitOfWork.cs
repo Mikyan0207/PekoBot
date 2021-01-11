@@ -8,9 +8,13 @@ namespace PekoBot.Database
 	{
 		PekoBotContext Context { get; set; }
 
+		public IChannelRepository Channels { get; }
+
 		public ILiveRepository Lives { get; }
 
-		public IMemberRepository Members { get; }
+		public IMembersRepository Members { get; }
+
+		public IRolesRepository Roles { get; }
 
 		int SaveChanges();
 

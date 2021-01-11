@@ -29,10 +29,16 @@ namespace PekoBot.Database
 			Context.Dispose();
 		}
 
+		private IChannelRepository _channelRepository;
+		public IChannelRepository Channels => _channelRepository ??= new ChannelRepository(Context);
+
 		private ILiveRepository _liveRepository;
 		public ILiveRepository Lives => _liveRepository ??= new LiveRepository(Context);
 
-		private IMemberRepository _memberRepository;
-		public IMemberRepository Members => _memberRepository ??= new MemberRepository(Context);
+		private IMembersRepository _memberRepository;
+		public IMembersRepository Members => _memberRepository ??= new MembersRepository(Context);
+
+		private IRolesRepository _rolesRepository;
+		public IRolesRepository Roles => _rolesRepository ??= new RolesRepository(Context);
 	}
 }
