@@ -38,6 +38,11 @@ namespace PekoBot.Core.Services.Impl
 			return context;
 		}
 
+		public IUnitOfWork GetUnitOfWork()
+		{
+			return new UnitOfWork(GetContext());
+		}
+
 		private static void Initialize(PekoBotContext context)
 		{
 			if (context.Members.FirstOrDefault(x => x.Name == "戌神ころね") == null)

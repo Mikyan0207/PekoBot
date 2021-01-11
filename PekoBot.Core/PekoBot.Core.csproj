@@ -34,4 +34,8 @@
     <ProjectReference Include="..\PekoBot.Entities\PekoBot.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modules\VTubers\Submodules\" />
+  </ItemGroup>
+
 </Project>

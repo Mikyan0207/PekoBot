@@ -11,9 +11,8 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using PekoBot.Core.Extensions;
-using PekoBot.Core.Modules.VTubers.Common;
-using PekoBot.Core.Modules.VTubers.Services;
 using PekoBot.Core.Services.Impl;
+using PekoBot.Database;
 
 namespace PekoBot.Core
 {
@@ -44,8 +43,10 @@ namespace PekoBot.Core
 			Services = new ServiceCollection()
 				.AddSingleton(Client)
 				.AddSingleton(ConfigurationService)
+				.LoadPekoBotServices(Assembly.GetExecutingAssembly())
 				.AddSingleton<DbService>()
-				.LoadPekoBotServices(Assembly.GetCallingAssembly())
+				.AddDbContext<PekoBotContext>()
+				.AddSingleton<UnitOfWork>()
 				.BuildServiceProvider();
 
 			CommandsNext = Client.UseCommandsNext(new CommandsNextConfiguration()
@@ -53,7 +54,8 @@ namespace PekoBot.Core
 				StringPrefixes = new[] { ConfigurationService.Configuration.Prefix },
 				EnableDms = false,
 				EnableMentionPrefix = false,
-				EnableDefaultHelp = true
+				EnableDefaultHelp = true,
+                Services = Services
 			});
 
 			Interactivity = Client.UseInteractivity(new InteractivityConfiguration()
@@ -65,14 +67,13 @@ namespace PekoBot.Core
 			});
 
 			CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
-
 		}
 
 		public async Task RunAsync()
 		{
 			await Client.ConnectAsync().ConfigureAwait(false);
 
-			await Services.GetService<HololiveService>().RunHandlersAsync().ConfigureAwait(false);
+			//await Services.GetService<HololiveService>().RunHandlersAsync().ConfigureAwait(false);
 
             await Task.Delay(-1).ConfigureAwait(false);
 		}
