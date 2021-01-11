@@ -145,8 +145,9 @@ namespace PekoBot.Core.Modules.VTubers.Services
 					Cover = live.Cover,
 					Room = live.Room,
 					Platform = live.Platform == "youtube" ? Platform.Youtube : Platform.Other,
-					Member = await GetMemberAsync(live.Channel).ConfigureAwait(false),
-					Reminded = false
+					Member = await ctx.Members.FirstOrDefaultAsync(x => x.YoutubeId == live.Channel).ConfigureAwait(false),
+					Reminded = false,
+					Notified = false
 				}).ConfigureAwait(false);
 				await ctx.SaveChangesAsync().ConfigureAwait(false);
 
