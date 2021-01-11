@@ -57,12 +57,28 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		{
 			var t1 = Task.Run(async () =>
 			{
-				await HololiveScheduledLivesHandler().ConfigureAwait(false);
+				try
+				{
+					await HololiveScheduledLivesHandler().ConfigureAwait(false);
+				}
+				catch (Exception e)
+				{
+					Logger.Error(e);
+					throw;
+				}
 			});
 
 			var t2 = Task.Run(async () =>
 			{
-				await HololiveReminderHandler().ConfigureAwait(false);
+				try
+				{
+					await HololiveReminderHandler().ConfigureAwait(false);
+				}
+				catch (Exception e)
+				{
+					Logger.Error(e);
+					throw;
+				}
 			});
 
 			var t3 = Task.Run(async () =>
