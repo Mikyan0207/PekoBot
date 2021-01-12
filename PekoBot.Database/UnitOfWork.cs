@@ -35,8 +35,8 @@ namespace PekoBot.Database
 		private ILiveRepository _liveRepository;
 		public ILiveRepository Lives => _liveRepository ??= new LiveRepository(Context);
 
-		private IMembersRepository _memberRepository;
-		public IMembersRepository Members => _memberRepository ??= new MembersRepository(Context);
+		private IVTubersRepository _vtuberRepository;
+		public IVTubersRepository VTubers => _vtuberRepository ??= new VTubersRepository(Context);
 
 		private IMessageRepository _messageRepository;
 		public IMessageRepository Messages => _messageRepository ??= new MessageRepository(Context);

@@ -13,7 +13,11 @@ namespace PekoBot.Database.Repositories
 
 		public async Task<Role> GetRoleByIdAsync(ulong id)
 		{
-			return await Context.Roles.Include(x=>x.Member).FirstOrDefaultAsync(x => x.RoleId == id).ConfigureAwait(false);
+			return await Context
+				.Roles
+				.Include(x => x.VTuber)
+				.FirstOrDefaultAsync(x => x.RoleId == id)
+				.ConfigureAwait(false);
 		}
 	}
 }

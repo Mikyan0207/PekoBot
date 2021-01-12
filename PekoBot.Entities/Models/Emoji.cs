@@ -10,6 +10,6 @@ namespace PekoBot.Entities.Models
 
 		public string Code { get; set; }
 
-		public Member Member { get; set; }
+		public VTuber VTuber { get; set; }
 	}
 }

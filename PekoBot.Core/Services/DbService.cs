@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NLog;
 using PekoBot.Core.Services.Interfaces;
@@ -7,6 +8,8 @@ using PekoBot.Entities.Models;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
 
 namespace PekoBot.Core.Services
 {
@@ -53,6 +56,10 @@ namespace PekoBot.Core.Services
 
 		private void Initialize(PekoBotContext context)
 		{
+			using var client = new GraphQLHttpClient(new GraphQLHttpClientOptions
+			{
+				EndPoint = new Uri("https://api.ihateani.me/v2/graphql")
+			}, new NewtonsoftJsonSerializer());
 		}
 	}
 }

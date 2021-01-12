@@ -11,6 +11,6 @@ namespace PekoBot.Entities.Models
 
 		public string Name { get; set; }
 
-		public IEnumerable<Member> Members { get; set; }
+		public IEnumerable<VTuber> VTubers { get; set; }
 	}
 }

@@ -277,7 +277,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 						CreatedAt = live.Time.PublishedAt,
 						LateBy = live.Time.LateBy,
 						Duration = live.Time.Duration,
-						Member = await uow.Members.GetByChannelIdAsync(live.Channel.Id).ConfigureAwait(false),
+						VTuber = await uow.VTubers.GetByChannelIdAsync(live.Channel.Id).ConfigureAwait(false),
 						Notified = false
 					}).ConfigureAwait(false);
 					await uow.SaveChangesAsync().ConfigureAwait(false);

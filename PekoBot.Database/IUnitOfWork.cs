@@ -12,7 +12,7 @@ namespace PekoBot.Database
 
 		public ILiveRepository Lives { get; }
 
-		public IMembersRepository Members { get; }
+		public IVTubersRepository VTubers { get; }
 
 		public IMessageRepository Messages { get; }
 

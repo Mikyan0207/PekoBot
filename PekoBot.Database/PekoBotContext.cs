@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using PekoBot.Entities;
+﻿using Microsoft.EntityFrameworkCore;
 using PekoBot.Entities.Models;
 
 namespace PekoBot.Database
 {
 	public class PekoBotContext : DbContext
 	{
+		public DbSet<Account> Accounts { get; set; }
 		public DbSet<Channel> Channels { get; set; }
 
 		public DbSet<Company> Companies { get; set; }
@@ -17,13 +16,13 @@ namespace PekoBot.Database
 
 		public DbSet<Live> Lives { get; set; }
 
-		public DbSet<Member> Members { get; set; }
-
 		public DbSet<Message> Messages { get; set; }
 
 		public DbSet<Role> Roles { get; set; }
 
 		public DbSet<User> Users { get; set; }
+
+		public DbSet<VTuber> VTubers { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -38,11 +37,11 @@ namespace PekoBot.Database
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<Company>()
-				.HasMany(x => x.Members)
+				.HasMany(x => x.VTubers)
 				.WithOne(x => x.Company);
 
 			modelBuilder.Entity<Emoji>()
-				.HasOne(x => x.Member)
+				.HasOne(x => x.VTuber)
 				.WithOne(x => x.Emoji);
 
 			modelBuilder.Entity<Guild>()
@@ -58,11 +57,15 @@ namespace PekoBot.Database
 				.WithOne(x => x.Guild);
 
 			modelBuilder.Entity<Live>()
-				.HasOne(x => x.Member);
+				.HasOne(x => x.VTuber);
 
-			modelBuilder.Entity<Member>()
+			modelBuilder.Entity<VTuber>()
 				.HasMany(x => x.Roles)
-				.WithOne(x => x.Member);
+				.WithOne(x => x.VTuber);
+
+			modelBuilder.Entity<VTuber>()
+				.HasMany(x => x.Accounts)
+				.WithOne(x => x.VTuber);
 
 			modelBuilder.Entity<Message>()
 				.HasOne(x => x.Channel)

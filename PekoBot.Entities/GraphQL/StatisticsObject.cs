@@ -8,7 +8,7 @@ namespace PekoBot.Entities.GraphQL
 		public int SubscriberCount { get; set; }
 
 		[JsonProperty("viewCount", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
-		public uint ViewCount { get; set; }
+		public int ViewCount { get; set; }
 
 		[JsonProperty("videoCount", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
 		public int VideoCount { get; set; }

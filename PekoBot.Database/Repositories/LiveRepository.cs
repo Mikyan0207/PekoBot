@@ -23,9 +23,9 @@ namespace PekoBot.Database.Repositories
 		public async Task<IEnumerable<Live>> GetUpcomingLivesWithMember()
 		{
 			return await Context.Lives
-				.Include(x => x.Member)
+				.Include(x => x.VTuber)
 					.ThenInclude(y => y.Roles)
-				.Include(x => x.Member)
+				.Include(x => x.VTuber)
 					.ThenInclude(y => y.Company)
 				.Where(x=>!x.Notified && (x.ScheduledStartTime - DateTime.UtcNow) <= TimeSpan.FromMinutes(15))
 				.ToListAsync()

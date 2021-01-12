@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.InteropServices;
 
 namespace PekoBot.Entities.Models
 {
-	public class Member
+	public class VTuber
 	{
 		[Key]
 		public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -26,5 +24,7 @@ namespace PekoBot.Entities.Models
 		public Emoji Emoji { get; set; }
 
 		public List<Role> Roles { get; set; }
+
+		public List<Account> Accounts { get; set; }
 	}
 }

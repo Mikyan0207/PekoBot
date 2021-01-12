@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace PekoBot.Entities.Models
@@ -35,7 +34,7 @@ namespace PekoBot.Entities.Models
 
 		public int Duration { get; set; }
 
-		public Member Member { get; set; }
+		public VTuber VTuber { get; set; }
 
 		public bool Notified { get; set; } = false;
 	}

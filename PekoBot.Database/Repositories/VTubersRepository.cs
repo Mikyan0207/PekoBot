@@ -7,24 +7,24 @@ using PekoBot.Entities.Models;
 
 namespace PekoBot.Database.Repositories
 {
-	public class MembersRepository : Repository<Member>, IMembersRepository
+	public class VTubersRepository : Repository<VTuber>, IVTubersRepository
 	{
-		public MembersRepository(PekoBotContext context) : base(context)
+		public VTubersRepository(PekoBotContext context) : base(context)
 		{
 		}
 
-		public async Task<Member> GetByChannelIdAsync(string channelId)
+		public async Task<VTuber> GetByChannelIdAsync(string channelId)
 		{
 			return await Context
-				.Members
+				.VTubers
 				.FirstOrDefaultAsync(x => x.YoutubeId == channelId)
 				.ConfigureAwait(false);
 		}
 
-		public async Task<Member> GetByNameAsync(string name)
+		public async Task<VTuber> GetByNameAsync(string name)
 		{
 			return await Context
-				.Members
+				.VTubers
 				.FirstOrDefaultAsync(x=>x.Name == name)
 				.ConfigureAwait(false);
 		}
