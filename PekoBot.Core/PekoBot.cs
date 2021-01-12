@@ -1,8 +1,6 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
@@ -11,8 +9,11 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 using PekoBot.Core.Extensions;
-using PekoBot.Core.Services.Impl;
+using PekoBot.Core.Services;
 using PekoBot.Database;
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace PekoBot.Core
 {
@@ -28,10 +29,13 @@ namespace PekoBot.Core
 
 		public ConfigurationService ConfigurationService { get; }
 
+		public DbService DbService { get; }
+
 		public PekoBot()
 		{
-            InitializeLogger();
+			InitializeLogger();
 			ConfigurationService = new ConfigurationService();
+			DbService = new DbService();
 
 			Client = new DiscordClient(new DiscordConfiguration()
 			{
@@ -44,7 +48,7 @@ namespace PekoBot.Core
 				.AddSingleton(Client)
 				.AddSingleton(ConfigurationService)
 				.LoadPekoBotServices(Assembly.GetExecutingAssembly())
-				.AddSingleton<DbService>()
+				.AddSingleton(DbService)
 				.AddDbContext<PekoBotContext>()
 				.AddSingleton<UnitOfWork>()
 				.BuildServiceProvider();
@@ -55,7 +59,7 @@ namespace PekoBot.Core
 				EnableDms = false,
 				EnableMentionPrefix = false,
 				EnableDefaultHelp = true,
-                Services = Services
+				Services = Services
 			});
 
 			Interactivity = Client.UseInteractivity(new InteractivityConfiguration()
@@ -67,107 +71,45 @@ namespace PekoBot.Core
 			});
 
 			CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
+
+			Client.MessageReactionAdded += ClientOnMessageReactionAdded;
+		}
+
+		private async Task ClientOnMessageReactionAdded(DiscordClient sender, MessageReactionAddEventArgs e)
+		{
+			using var uow = DbService.GetUnitOfWork();
+			var message = uow.Messages.GetMessageById(e.Message.Id);
+
+			if (message == null)
+				return;
+
+
 		}
 
 		public async Task RunAsync()
 		{
 			await Client.ConnectAsync().ConfigureAwait(false);
-
-			//await Services.GetService<HololiveService>().RunHandlersAsync().ConfigureAwait(false);
-
-            await Task.Delay(-1).ConfigureAwait(false);
+			await Task.Delay(-1).ConfigureAwait(false);
 		}
 
-        public static void InitializeLogger()
-        {
-            var loggingConfig = new LoggingConfiguration();
-            var coloredConsoleTarget = new ColoredConsoleTarget()
-            {
-                Layout = "[${logger:shortName=true}] - ${longdate}\n${message}\n"
-            };
+		public static void InitializeLogger()
+		{
+			var loggingConfig = new LoggingConfiguration();
+			var coloredConsoleTarget = new ColoredConsoleTarget()
+			{
+				Layout = "[${logger:shortName=true}] - ${longdate}\n${message}\n"
+			};
 
-            loggingConfig.AddTarget("Console", coloredConsoleTarget);
-            loggingConfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, coloredConsoleTarget));
+			loggingConfig.AddTarget("Console", coloredConsoleTarget);
+			loggingConfig.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, coloredConsoleTarget));
 
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Regex = "\\[[^\\]]*\\]",
-                ForegroundColor = ConsoleOutputColor.Cyan,
-            });
+			coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
+			{
+				Regex = "\\[[^\\]]*\\]",
+				ForegroundColor = ConsoleOutputColor.Cyan,
+			});
 
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Guild Joined",
-                ForegroundColor = ConsoleOutputColor.Green,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Guild Left",
-                ForegroundColor = ConsoleOutputColor.Blue,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Guild Available",
-                ForegroundColor = ConsoleOutputColor.Yellow
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Name",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Owner",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Members",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Created",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "User",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Channel",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Guild",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Date",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            coloredConsoleTarget.WordHighlightingRules.Add(new ConsoleWordHighlightingRule
-            {
-                Text = "Raw Message",
-                ForegroundColor = ConsoleOutputColor.Red,
-            });
-
-            LogManager.Configuration = loggingConfig;
-        }
-    }
+			LogManager.Configuration = loggingConfig;
+		}
+	}
 }

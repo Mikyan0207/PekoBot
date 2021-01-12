@@ -22,5 +22,7 @@ namespace PekoBot.Entities.Models
 		public Guild Guild { get; set; }
 
 		public List<Role> Roles { get; set; }
+
+		public List<Message> Messages { get; set; }
 	}
 }

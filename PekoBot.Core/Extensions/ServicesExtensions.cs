@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NLog;
+using PekoBot.Core.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
-using NLog;
-using PekoBot.Core.Services;
 
 namespace PekoBot.Core.Extensions
 {
@@ -48,5 +48,5 @@ namespace PekoBot.Core.Extensions
 		{
 			return assembly.GetLoadableTypes().Where(x => x.GetInterfaces().Contains(type)).ToList();
 		}
-    }
+	}
 }

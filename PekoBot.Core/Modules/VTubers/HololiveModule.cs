@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using Microsoft.EntityFrameworkCore;
 using NLog;
 using PekoBot.Core.Modules.VTubers.Services;
-using PekoBot.Core.Services.Impl;
-using PekoBot.Entities.Models;
-using ChannelType = PekoBot.Entities.Enums.ChannelType;
+using System.Threading.Tasks;
 
 namespace PekoBot.Core.Modules.VTubers
 {

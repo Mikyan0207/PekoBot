@@ -11,13 +11,19 @@ namespace PekoBot.Database
 
 		public DbSet<Company> Companies { get; set; }
 
-		public DbSet<Guild> Guilds { get; set; }
+		public DbSet<Emoji> Emojis { get; set; }
 
-		public DbSet<Member> Members { get; set; }
+		public DbSet<Guild> Guilds { get; set; }
 
 		public DbSet<Live> Lives { get; set; }
 
+		public DbSet<Member> Members { get; set; }
+
+		public DbSet<Message> Messages { get; set; }
+
 		public DbSet<Role> Roles { get; set; }
+
+		public DbSet<User> Users { get; set; }
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
@@ -31,6 +37,14 @@ namespace PekoBot.Database
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			modelBuilder.Entity<Company>()
+				.HasMany(x => x.Members)
+				.WithOne(x => x.Company);
+
+			modelBuilder.Entity<Emoji>()
+				.HasOne(x => x.Member)
+				.WithOne(x => x.Emoji);
+
 			modelBuilder.Entity<Guild>()
 				.HasMany(x => x.Channels)
 				.WithOne(x => x.Guild);
@@ -43,16 +57,20 @@ namespace PekoBot.Database
 				.HasMany(x => x.Users)
 				.WithOne(x => x.Guild);
 
+			modelBuilder.Entity<Live>()
+				.HasOne(x => x.Member);
+
 			modelBuilder.Entity<Member>()
 				.HasMany(x => x.Roles)
 				.WithOne(x => x.Member);
 
-			modelBuilder.Entity<Company>()
-				.HasMany(x => x.Members)
-				.WithOne(x => x.Company);
+			modelBuilder.Entity<Message>()
+				.HasOne(x => x.Channel)
+				.WithMany(x => x.Messages);
 
-			modelBuilder.Entity<Live>()
-				.HasOne(x => x.Member);
+			modelBuilder.Entity<Message>()
+				.HasOne(x => x.Author)
+				.WithMany(x => x.Messages);
 
 			base.OnModelCreating(modelBuilder);
 		}

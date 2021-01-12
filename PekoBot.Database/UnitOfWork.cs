@@ -38,6 +38,9 @@ namespace PekoBot.Database
 		private IMembersRepository _memberRepository;
 		public IMembersRepository Members => _memberRepository ??= new MembersRepository(Context);
 
+		private IMessageRepository _messageRepository;
+		public IMessageRepository Messages => _messageRepository ??= new MessageRepository(Context);
+
 		private IRolesRepository _rolesRepository;
 		public IRolesRepository Roles => _rolesRepository ??= new RolesRepository(Context);
 	}

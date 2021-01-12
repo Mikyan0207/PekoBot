@@ -14,6 +14,8 @@ namespace PekoBot.Database
 
 		public IMembersRepository Members { get; }
 
+		public IMessageRepository Messages { get; }
+
 		public IRolesRepository Roles { get; }
 
 		int SaveChanges();

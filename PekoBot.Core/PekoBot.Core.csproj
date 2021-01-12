@@ -6,19 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Companies.json" />
-    <None Remove="Resources\Members.json" />
     <None Remove="Resources\PekoBotConfiguration.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Companies.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <EmbeddedResource Include="Resources\PekoBotConfiguration.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Members.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

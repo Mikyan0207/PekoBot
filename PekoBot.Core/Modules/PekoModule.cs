@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using System;
+using System.Threading.Tasks;
 
 namespace PekoBot.Core.Modules
 {
@@ -36,5 +36,5 @@ namespace PekoBot.Core.Modules
 
 			return await EmbedAsync(ctx, embedBuilder).ConfigureAwait(false);
 		}
-    }
+	}
 }

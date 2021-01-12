@@ -23,6 +23,8 @@ namespace PekoBot.Entities.Models
 
 		public Company Company { get; set; }
 
+		public Emoji Emoji { get; set; }
+
 		public List<Role> Roles { get; set; }
 	}
 }

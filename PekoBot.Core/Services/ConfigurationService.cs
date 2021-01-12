@@ -1,8 +1,9 @@
-﻿using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using PekoBot.Core.Services.Interfaces;
 using PekoBot.Entities.Json;
+using System.IO;
 
-namespace PekoBot.Core.Services.Impl
+namespace PekoBot.Core.Services
 {
 	public class ConfigurationService : IService
 	{

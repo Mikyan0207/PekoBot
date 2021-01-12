@@ -1,12 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using Microsoft.EntityFrameworkCore;
+﻿using DSharpPlus.CommandsNext.Attributes;
 using NLog;
-using PekoBot.Core.Services.Impl;
-using PekoBot.Entities.Models;
+using PekoBot.Core.Services;
 
 namespace PekoBot.Core.Modules.VTubers
 {

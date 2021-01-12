@@ -6,12 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using NLog;
 using PekoBot.Core.Extensions;
 using PekoBot.Core.Services;
-using PekoBot.Core.Services.Impl;
+using PekoBot.Core.Services.Interfaces;
 using PekoBot.Entities.GraphQL;
 using PekoBot.Entities.Models;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
