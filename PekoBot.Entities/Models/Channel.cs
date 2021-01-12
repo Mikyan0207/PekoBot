@@ -14,6 +14,10 @@ namespace PekoBot.Entities.Models
 
 		public string ChannelName { get; set; }
 
-		public ChannelType ChannelType { get; set; }
+		public string ChannelType { get; set; }
+
+		public List<Message> Messages { get; set; }
+
+		public Guild Guild { get; set; }
 	}
 }

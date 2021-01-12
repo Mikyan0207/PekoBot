@@ -11,6 +11,8 @@ namespace PekoBot.Database
 
 		public DbSet<Company> Companies { get; set; }
 
+		public DbSet<Guild> Guilds { get; set; }
+
 		public DbSet<Member> Members { get; set; }
 
 		public DbSet<Live> Lives { get; set; }
@@ -29,15 +31,28 @@ namespace PekoBot.Database
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Member>()
-				.Property(x => x.Nicknames)
-				.HasConversion(
-					v => string.Join(',', v),
-					v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
+			modelBuilder.Entity<Guild>()
+				.HasMany(x => x.Channels)
+				.WithOne(x => x.Guild);
 
-			modelBuilder.Entity<Role>()
-				.HasOne(x => x.Member)
-				.WithOne(x => x.Role);
+			modelBuilder.Entity<Guild>()
+				.HasMany(x => x.Roles)
+				.WithOne(x => x.Guild);
+
+			modelBuilder.Entity<Guild>()
+				.HasMany(x => x.Users)
+				.WithOne(x => x.Guild);
+
+			modelBuilder.Entity<Member>()
+				.HasMany(x => x.Roles)
+				.WithOne(x => x.Member);
+
+			modelBuilder.Entity<Company>()
+				.HasMany(x => x.Members)
+				.WithOne(x => x.Company);
+
+			modelBuilder.Entity<Live>()
+				.HasOne(x => x.Member);
 
 			base.OnModelCreating(modelBuilder);
 		}

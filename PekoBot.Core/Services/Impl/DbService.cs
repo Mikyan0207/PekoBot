@@ -86,7 +86,6 @@ namespace PekoBot.Core.Services.Impl
 					context.Members.Add(new Member
 					{
 						Name = member.Name,
-						Nicknames = member.Nicknames.ToArray(),
 						AvatarUrl = member.AvatarUrl,
 						Company = context.Companies.FirstOrDefault(x => x.Name == member.Company),
 						YoutubeId = member.YouTubeId

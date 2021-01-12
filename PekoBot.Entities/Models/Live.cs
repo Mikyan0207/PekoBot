@@ -9,19 +9,31 @@ namespace PekoBot.Entities.Models
 		[Key]
 		public string Id { get; set; } = Guid.NewGuid().ToString();
 
-		public int LiveId { get; set; }
+		public string LiveId { get; set; }
 
 		public string Title { get; set; }
 
-		public DateTime StartAt { get; set; }
+		public string Thumbnail { get; set; }
+
+		public Platform Platform { get; set; }
+
+		public uint Viewers { get; set; }
+
+		public bool IsPremiere { get; set; }
+
+		public Status Status { get; set; }
+
+		public DateTime ScheduledStartTime { get; set; }
+
+		public DateTime StartTime { get; set; }
+
+		public DateTime EndTime { get; set; }
 
 		public DateTime CreatedAt { get; set; }
 
-		public string Cover { get; set; }
+		public int LateBy { get; set; }
 
-		public string Room { get; set; }
-
-		public Platform Platform { get; set; }
+		public int Duration { get; set; }
 
 		public Member Member { get; set; }
 
@@ -31,6 +43,17 @@ namespace PekoBot.Entities.Models
 	public enum Platform
 	{
 		Youtube,
-		Other,
+		Twitch,
+		Bilibili,
+		Twitcasting,
+		Other
+	}
+
+	public enum Status
+	{
+		Upcoming,
+		Live,
+		Ended,
+		Unknown
 	}
 }

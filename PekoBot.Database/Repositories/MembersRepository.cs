@@ -23,15 +23,10 @@ namespace PekoBot.Database.Repositories
 
 		public async Task<Member> GetByNameAsync(string name)
 		{
-			var roles = await Context
+			return await Context
 				.Members
-				.Include(x=>x.Role)
-				.ToListAsync()
+				.FirstOrDefaultAsync(x=>x.Name == name)
 				.ConfigureAwait(false);
-
-			return roles.FirstOrDefault(x =>
-				String.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase) ||
-				x.Nicknames.Any(y => String.Equals(y, name, StringComparison.InvariantCultureIgnoreCase)));
 		}
 	}
 }

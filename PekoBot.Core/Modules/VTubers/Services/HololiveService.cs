@@ -1,277 +1,358 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using DSharpPlus;
+using GraphQL;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
+using Microsoft.EntityFrameworkCore;
+using NLog;
+using PekoBot.Core.Extensions;
+using PekoBot.Core.Services;
+using PekoBot.Core.Services.Impl;
+using PekoBot.Entities.GraphQL;
+using PekoBot.Entities.Models;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.Entities;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using NLog;
-using PekoBot.Core.Modules.VTubers.Common;
-using PekoBot.Core.Services;
-using PekoBot.Core.Services.Impl;
-using PekoBot.Entities;
-using PekoBot.Entities.Models;
-using ChannelType = PekoBot.Entities.Enums.ChannelType;
 
 namespace PekoBot.Core.Modules.VTubers.Services
 {
 	public class HololiveService : IService
 	{
-		private static readonly string API_URL = "https://holo.dev/api/v1/";
-		private static readonly string SCHEDULED_LIVE_ENDPOINT = "lives/scheduled";
-
-		private static HttpClient HttpClient { get; set; }
+		// ReSharper disable once InconsistentNaming
+		private static GraphQLHttpClient GraphQLHttpClient { get; set; }
 
 		private static Logger Logger { get; set; }
 
-		private DbService DbService { get; set; }
+		private DbService DbService { get; }
 
 		private DiscordClient Client { get; }
 
-		private CancellationTokenSource ScheduledLiveTokenSource { get; set; } 
-		private CancellationToken ScheduledLiveToken { get; set; }
-
-		private CancellationTokenSource CurrentLiveTokenSource { get; set; }
-		private CancellationToken CurrentLiveToken { get; set; }
+		private CancellationTokenSource LiveTokenSource { get; set; }
+		private CancellationToken LiveToken { get; set; }
 
 		public HololiveService(DbService dbService, DiscordClient client)
 		{
 			Logger = LogManager.GetCurrentClassLogger();
+			GraphQLHttpClient = new GraphQLHttpClient(new GraphQLHttpClientOptions()
+			{
+				EndPoint = new Uri("https://api.ihateani.me/v2/graphql")
+
+			}, new NewtonsoftJsonSerializer());
+
 			DbService = dbService;
 			Client = client;
-
-			HttpClient = new HttpClient(new HttpClientHandler()
-			{
-				AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate
-			}, true);
-
-			HttpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36");
 		}
 
 		public Task RunHandlersAsync()
 		{
-			ScheduledLiveTokenSource = new CancellationTokenSource();
-			ScheduledLiveToken = ScheduledLiveTokenSource.Token;
-
-			CurrentLiveTokenSource = new CancellationTokenSource();
-			CurrentLiveToken = CurrentLiveTokenSource.Token;
+			LiveTokenSource = new CancellationTokenSource();
+			LiveToken = LiveTokenSource.Token;
 
 			_ = Task.Run(async () =>
 			{
 				try
 				{
-					await HololiveScheduledLivesHandler().ConfigureAwait(false);
+					while (true)
+					{
+						if (LiveToken.IsCancellationRequested)
+							break;
+
+						await UpcomingLivesHandler().ConfigureAwait(false);
+						await Task.Delay(TimeSpan.FromMinutes(20), LiveToken).ConfigureAwait(false);
+					}
 				}
 				catch (Exception e)
 				{
 					Logger.Error(e);
-					throw;
 				}
-			}, ScheduledLiveTokenSource.Token);
+			}, LiveToken);
 
 			_ = Task.Run(async () =>
 			{
 				try
 				{
-					await HololiveCurrentLivesHandler().ConfigureAwait(false);
+					while (true)
+					{
+						if (LiveToken.IsCancellationRequested)
+							break;
+
+						await UpcomingLivesHandler().ConfigureAwait(false);
+						await Task.Delay(TimeSpan.FromMinutes(20), LiveToken).ConfigureAwait(false);
+					}
 				}
 				catch (Exception e)
 				{
 					Logger.Error(e);
-					throw;
 				}
-			}, CurrentLiveTokenSource.Token);
+			}, LiveToken);
 
 			return Task.CompletedTask;
 		}
 
 		public bool StopHandlers()
 		{
-			if (ScheduledLiveTokenSource == null && CurrentLiveTokenSource == null)
+			if (LiveTokenSource == null)
 				return false;
 
-			ScheduledLiveTokenSource?.Cancel();
-			CurrentLiveTokenSource?.Cancel();
-
+			LiveTokenSource?.Cancel();
 			return true;
 		}
 
-		private static async Task<string> GetAsync(string url)
-		{
-			return await HttpClient.GetStringAsync(new Uri(url)).ConfigureAwait(false);
-		}
-
-		public async Task<Member> GetMemberAsync(string channelId)
-		{
-			using var uow = DbService.GetUnitOfWork();
-
-			return await uow.Members.GetByChannelIdAsync(channelId).ConfigureAwait(false);
-		}
-
-		private async Task<Live> GetLiveAsync(int liveId)
-		{
-			using var uow = DbService.GetUnitOfWork();
-
-			return await uow.Lives.GetLiveByIdAsync(liveId).ConfigureAwait(false);
-		}
-
-		private async Task<Live> AddLiveAsync(HololiveLive live)
+		private static async Task<IEnumerable<LiveObject>> GetUpcomingLivesAsync()
 		{
 			try
 			{
-				using var uow = DbService.GetUnitOfWork();
-
-				var e = new Live
+				var response = await GraphQLHttpClient.SendQueryAsync<ResponseObject>(new GraphQLRequest
 				{
-					LiveId = live.Id,
-					Title = live.Title,
-					StartAt = live.StartAt,
-					CreatedAt = live.CreatedAt,
-					Cover = live.Cover,
-					Room = live.Room,
-					Platform = live.Platform == "youtube" ? Platform.Youtube : Platform.Other,
-					Member = await uow.Members.GetByChannelIdAsync(live.Channel).ConfigureAwait(false),
-					Notified = false
-				};
+					Query = @"query {
+						vtuber { 
+							upcoming(groups: [""hololive""])
+							{
+								items
+								{
+									id
+									title
+									thumbnail
+									platform
+									group
+									viewers
+									is_premiere
+									timeData {
+										scheduledStartTime
+										startTime
+										lateBy
+										publishedAt
+									}
+									channel {
+										name
+										id
+										image
+									}
+								}
+								pageInfo {
+									nextCursor
+									hasNextPage
+								}
+							}
+						}
+					}
+				"
+				}).ConfigureAwait(false);
 
-				await uow.Lives.AddAsync(e).ConfigureAwait(false);
-				await uow.SaveChangesAsync().ConfigureAwait(false);
-
-				return e;
+				return response.Data.VTuber.VTuberUpcomingLives?.Lives;
 			}
-			catch (DbUpdateConcurrencyException e)
+			catch (Exception e)
 			{
 				Logger.Error(e);
-				throw;
+				return null;
 			}
 		}
 
-		private async Task HololiveScheduledLivesHandler()
+		private static async Task<IEnumerable<LiveObject>> GetCurrentLivesAsync()
 		{
-			while (true)
+			try
 			{
-				if (ScheduledLiveToken.IsCancellationRequested)
-					break;
-
-				var apiResponse = await GetAsync(API_URL + SCHEDULED_LIVE_ENDPOINT).ConfigureAwait(false);
-				var lives = JsonConvert.DeserializeObject<HololiveLives>(apiResponse);
-				var channels = await DbService
-					.GetContext()
-					.Channels
-					.Where(x => x.ChannelType == ChannelType.Hololive)
-					.ToListAsync()
-					.ConfigureAwait(false);
-
-				Logger.Info($"Checking scheduled {lives.TotalLives} lives...");
-
-				foreach (var live in lives.Lives)
+				var response = await GraphQLHttpClient.SendQueryAsync<ResponseObject>(new GraphQLRequest
 				{
-					var cachedLive = await GetLiveAsync(live.Id).ConfigureAwait(false);
-
-					if (cachedLive != null)
-						continue;
-
-					var member = await GetMemberAsync(live.Channel).ConfigureAwait(false);
-
-					if (member == null)
-						continue;
-					if ((live.StartAt - DateTime.UtcNow).Duration() >= TimeSpan.FromHours(6))
-						continue;
-
-					var e = await AddLiveAsync(live).ConfigureAwait(false);
-
-					foreach (var channel in channels)
-					{
-						await Client.SendMessageAsync(await Client.GetChannelAsync(channel.ChannelId),
-							embed: CreateNotificationEmbed(e)).ConfigureAwait(false);
-
-						Thread.Sleep(TimeSpan.FromSeconds(5));
+					Query = @"query {
+						vtuber { 
+							live(groups: [""hololive""])
+							{
+								items
+								{
+									id
+									title
+									thumbnail
+									platform
+									group
+									viewers
+									is_premiere
+									timeData {
+										scheduledStartTime
+										startTime
+										lateBy
+										publishedAt
+									}
+									channel {
+										name
+										id
+										image
+									}
+								}
+								pageInfo {
+									nextCursor
+									hasNextPage
+								}
+							}
+						}
 					}
-				}
+				"
+				}).ConfigureAwait(false);
 
-				await Task.Delay(TimeSpan.FromMinutes(30));
+				return response.Data.VTuber.VTuberUpcomingLives?.Lives;
+			}
+			catch (Exception e)
+			{
+				Logger.Error(e);
+				return null;
 			}
 		}
 
-		private async Task HololiveCurrentLivesHandler()
+		private static async Task<IEnumerable<LiveObject>> GetEndedLivesAsync()
 		{
-			while (true)
+			try
 			{
-				if (CurrentLiveToken.IsCancellationRequested)
-					break;
-
-				var ctx = DbService.GetContext();
-				var channels = await ctx
-					.Channels
-					.Where(x => x.ChannelType == ChannelType.Hololive)
-					.ToListAsync()
-					.ConfigureAwait(false);
-
-				var lives = await ctx
-					.Lives
-					.Include(x => x.Member)
-					.Where(x => !x.Notified)
-					.ToListAsync()
-					.ConfigureAwait(false);
-
-				Logger.Info($"Checking {lives.Count} current lives...");
-
-				foreach (var live in lives.Where(live => (live.StartAt - DateTime.UtcNow).Duration() <= TimeSpan.FromMinutes(5)))
+				var response = await GraphQLHttpClient.SendQueryAsync<ResponseObject>(new GraphQLRequest
 				{
+					Query = @"query {
+						vtuber { 
+							ended(groups: [""hololive""])
+							{
+								items
+								{
+									id
+									title
+									thumbnail
+									platform
+									group
+									viewers
+									is_premiere
+									timeData {
+										scheduledStartTime
+										startTime
+										lateBy
+										publishedAt
+									}
+									channel {
+										name
+										id
+										image
+									}
+								}
+								pageInfo {
+									nextCursor
+									hasNextPage
+								}
+							}
+						}
+					}
+				"
+				}).ConfigureAwait(false);
+
+				return response.Data.VTuber.VTuberUpcomingLives?.Lives;
+			}
+			catch (Exception e)
+			{
+				Logger.Error(e);
+				return null;
+			}
+		}
+
+		private async Task UpcomingLivesHandler()
+		{
+			using var uow = DbService.GetUnitOfWork();
+			var lives = await GetUpcomingLivesAsync().ConfigureAwait(false);
+
+			foreach (var live in lives)
+			{
+				var cachedLive = await uow.Lives.GetLiveByIdAsync(live.Id).ConfigureAwait(false);
+
+				if (cachedLive != null)
+					continue;
+
+				try
+				{
+					await uow.Lives.AddAsync(new Live
+					{
+						LiveId = live.Id,
+						Title = live.Title,
+						Thumbnail = live.Thumbnail,
+						Platform = live.Platform.ToEnum<Platform>(),
+						Viewers = live.Viewers,
+						IsPremiere = live.IsPremiere,
+						Status = live.Status.ToEnum<Status>(),
+						ScheduledStartTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.ScheduledStartTime).UtcDateTime,
+						StartTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.StartTime).UtcDateTime,
+						EndTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.EndTime).UtcDateTime,
+						CreatedAt = live.Time.PublishedAt,
+						LateBy = live.Time.LateBy,
+						Duration = live.Time.Duration,
+						Member = await uow.Members.GetByChannelIdAsync(live.Channel.Id).ConfigureAwait(false),
+						Notified = false
+					}).ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
+				}
+				catch (DbUpdateConcurrencyException ex)
+				{
+					Logger.Error(ex);
+				}
+			}
+		}
+
+		private async Task NotificationHandler()
+		{
+			using var uow = DbService.GetUnitOfWork();
+			var lives = await uow.Lives.GetUpcomingLivesWithMember().ConfigureAwait(false);
+
+			foreach (var live in lives)
+			{
+				try
+				{
+
+
 					live.Notified = true;
-
-					using var uow = DbService.GetUnitOfWork();
 					uow.Lives.Update(live);
-
-					foreach (var channel in channels)
-					{
-						await Client.SendMessageAsync(await Client.GetChannelAsync(channel.ChannelId),
-							embed: LiveNotificationEmbed(live)).ConfigureAwait(false);
-
-						Thread.Sleep(TimeSpan.FromSeconds(5));
-					}
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 				}
-
-				await Task.Delay(TimeSpan.FromMinutes(5));
+				catch (Exception e)
+				{
+					Logger.Error(e);
+				}
 			}
 		}
 
-		private static DiscordEmbed CreateNotificationEmbed(Live live)
-		{
-			var t = (live.StartAt - DateTime.UtcNow).Duration();
-			var embed = new DiscordEmbedBuilder()
-				.WithColor(DiscordColor.Red)
-				.WithImageUrl(live.Cover)
-				.WithTitle($"{live.Member.Name} scheduled a new live")
-				.WithDescription(live.Title)
-				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
-				.WithAuthor(live.Member.Name, $"https://www.youtube.com/channel/{live.Member.YoutubeId}", live.Member.AvatarUrl)
-				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToShortTimeString()}", "https://png.pngtree.com/element_our/sm/20180301/sm_5a9797d5c93d3.jpg")
-				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
-				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true);
+		//private async Task HololiveCurrentLivesHandler()
+		//{
+		//	while (true)
+		//	{
+		//		if (CurrentLiveToken.IsCancellationRequested)
+		//			break;
 
-			return embed.Build();
-		}
+		//		var ctx = DbService.GetContext();
+		//		var channels = await ctx
+		//			.Channels
+		//			.Where(x => x.ChannelType == ChannelType.Hololive)
+		//			.ToListAsync()
+		//			.ConfigureAwait(false);
 
-		private static DiscordEmbed LiveNotificationEmbed(Live live)
-		{
-			var t = (live.StartAt - DateTime.UtcNow).Duration();
-			var embed = new DiscordEmbedBuilder()
-				.WithColor(DiscordColor.Red)
-				.WithImageUrl(live.Cover)
-				.WithTitle($"{live.Member.Name}'s live will be starting soon!")
-				.WithDescription(live.Title)
-				.WithUrl($"https://www.youtube.com/watch?v={live.Room}")
-				.WithFooter($"{live.StartAt.ToShortDateString()} {live.StartAt.ToShortTimeString()}", "https://png.pngtree.com/element_our/sm/20180301/sm_5a9797d5c93d3.jpg")
-				.WithAuthor(live.Member.Name, $"https://www.youtube.com/channel/{live.Member.YoutubeId}", live.Member.AvatarUrl)
-				.AddField("Platform", live.Platform == Platform.Youtube ? "YouTube" : "Other", true)
-				.AddField("Start in", t.ToString(@"hh\:mm\:ss"), true)
-				.AddField("Mentions", "", false);
+		//		var lives = await ctx
+		//			.Lives
+		//			.Include(x => x.Member)
+		//			.Where(x => !x.Notified)
+		//			.ToListAsync()
+		//			.ConfigureAwait(false);
 
-			return embed.Build();
-		}
+		//		Logger.Info($"Checking {lives.Count} current lives...");
+
+		//		foreach (var live in lives.Where(live => (live.StartAt - DateTime.UtcNow).Duration() <= TimeSpan.FromMinutes(5)))
+		//		{
+		//			live.Notified = true;
+
+		//			using var uow = DbService.GetUnitOfWork();
+		//			uow.Lives.Update(live);
+
+		//			foreach (var channel in channels)
+		//			{
+		//				await Client.SendMessageAsync(await Client.GetChannelAsync(channel.ChannelId),
+		//					embed: LiveNotificationEmbed(live)).ConfigureAwait(false);
+
+		//				Thread.Sleep(TimeSpan.FromSeconds(5));
+		//			}
+		//		}
+
+		//		await Task.Delay(TimeSpan.FromMinutes(5));
+		//	}
+		//}
 	}
 }
