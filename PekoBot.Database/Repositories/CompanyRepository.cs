@@ -3,6 +3,7 @@ using NLog;
 using PekoBot.Database.Repositories.Interfaces;
 using PekoBot.Entities.Models;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories
@@ -42,10 +43,11 @@ namespace PekoBot.Database.Repositories
 
 		public async Task<Company> GetByNameAsync(string name)
 		{
-			return await Context
+			var companies = await Context
 				.Companies
-				.FirstOrDefaultAsync(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase))
-				.ConfigureAwait(false);
+				.ToListAsync().ConfigureAwait(false);
+
+			return companies.FirstOrDefault(x => x.Name.ToLowerInvariant() == name.ToLowerInvariant());
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PekoBot.Entities.Models
 {
@@ -17,11 +18,16 @@ namespace PekoBot.Entities.Models
 
 		public string AvatarUrl { get; set; }
 
+		public string Platform { get; set; }
+
 		public Statistics Statistics { get; set; }
 
 		public Company Company { get; set; }
 
+		[ForeignKey("EmojiId")]
 		public Emoji Emoji { get; set; }
+
+		public string EmojiId { get; set; }
 
 		public List<Role> Roles { get; set; }
 	}

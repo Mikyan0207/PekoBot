@@ -21,6 +21,7 @@ using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using NLog.Fluent;
 using PekoBot.Entities.GraphQL;
 using PekoBot.Entities.Models;
 
@@ -88,13 +89,8 @@ namespace PekoBot.Core
 
 		public async Task RunAsync()
 		{
-			Logger.Info("Loading VTubers Companies...");
 			await SeedVTubersCompaniesAsync().ConfigureAwait(false);
-
-			Logger.Info("Loading VTubers...");
 			await SeedVTubersAsync().ConfigureAwait(false);
-
-			Logger.Info("Loading Emojis...");
 			await SeedEmojisAsync().ConfigureAwait(false);
 
 			await Client.ConnectAsync().ConfigureAwait(false);
@@ -103,10 +99,11 @@ namespace PekoBot.Core
 
 		private async Task SeedVTubersCompaniesAsync()
 		{
+			Logger.Info("Loading VTubers Companies..."); // @Debug
+
 			var ctx = DbService.GetContext();
 			var content = await File.ReadAllTextAsync("Resources/Companies.json").ConfigureAwait(false);
 			var companies = JsonConvert.DeserializeObject<List<Entities.Json.Companies>>(content);
-
 
 			foreach (var c in companies.Where(company => !ctx.Companies.Any(x => x.Name == company.Name)))
 			{
@@ -128,37 +125,57 @@ namespace PekoBot.Core
 					break;
 				}
 			}
+
+			Logger.Info($"Loaded {companies.Count} VTubers Companies..."); // @Debug
 		}
 
 		private async Task SeedVTubersAsync()
 		{
+			Logger.Info("Loading VTubers..."); // @Debug
+
+			var ctx = DbService.GetContext();
+			Logger.Info(ctx.VTubers.Count());
+
+
+			if (ctx.VTubers.Any())
+			{
+				Logger.Info($"Loaded {ctx.VTubers.Count()} VTubers..."); // @Debug
+				return;
+			}
+
 			using var client = new GraphQLHttpClient(new GraphQLHttpClientOptions
 			{
 				EndPoint = new Uri("https://api.ihateani.me/v2/graphql")
 			}, new NewtonsoftJsonSerializer());
 			var response = await client.SendQueryAsync<ResponseObject>(new GraphQLHttpRequest($"query {{ vtuber {{ channels {{ items {{ id user_id name en_name image platform group statistics {{ subscriberCount viewCount videoCount }} }} pageInfo {{ nextCursor hasNextPage }} }} }} }}")).ConfigureAwait(false);
+			var nbr = 0;
+			var uow = DbService.GetUnitOfWork();
 
 			while (true)
 			{
 				var channelObject = response.Data.VTuber.VTuberChannelsObject;
-				using var uow = DbService.GetUnitOfWork();
+
+				nbr += channelObject.Channels.Count;
 
 				foreach (var ch in channelObject.Channels)
 				{
-					var e = uow.VTubers.GetByNameAsync(ch.Name);
+					var e = await uow.VTubers.GetByNameAsync(ch.Name).ConfigureAwait(false);
 
 					if (e != null)
 						continue;
 
 					try
 					{
+						var company = await uow.Companies.GetByNameAsync(ch.Group).ConfigureAwait(false);
+						
 						await uow.VTubers.AddAsync(new VTuber
 						{
 							Name = ch.Name,
 							EnglishName = ch.EnglishName,
 							AvatarUrl = ch.Image,
 							ChannelId = ch.Id,
-							Company = await uow.Companies.GetByNameAsync(ch.Group).ConfigureAwait(false),
+							Company = company,
+							Platform = ch.Platform,
 							Statistics = new Statistics
 							{
 								SubscriberCount = ch.Statistics.SubscriberCount,
@@ -180,10 +197,14 @@ namespace PekoBot.Core
 
 				response = await client.SendQueryAsync<ResponseObject>(new GraphQLHttpRequest($"query {{ vtuber {{ channels(cursor:\"{channelObject.PageInfo.NextCursor}\") {{ items {{ id user_id name en_name image platform group statistics {{ subscriberCount viewCount videoCount }} }} pageInfo {{ nextCursor hasNextPage }} }} }} }}")).ConfigureAwait(false);
 			}
+
+			Logger.Info($"Loaded {nbr} VTubers..."); // @Debug
 		}
 
 		private async Task SeedEmojisAsync()
 		{
+			Logger.Info("Loading VTubers Emojis..."); // @Debug
+
 			var ctx = DbService.GetContext();
 			var content = await File.ReadAllTextAsync("Resources/Emojis.json").ConfigureAwait(false);
 			var emojis = JsonConvert.DeserializeObject<List<Entities.Json.Emoji>>(content);
@@ -207,6 +228,8 @@ namespace PekoBot.Core
 					break;
 				}
 			}
+
+			Logger.Info($"Loaded {emojis.Count} VTubers Emojis..."); // @Debug
 		}
 
 		public static void InitializeLogger()
