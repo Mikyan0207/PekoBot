@@ -6,10 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Companies.json" />
+    <None Remove="Resources\Emojis.json" />
     <None Remove="Resources\PekoBotConfiguration.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Companies.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Emojis.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\PekoBotConfiguration.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -35,6 +43,10 @@
   <ItemGroup>
     <ProjectReference Include="..\PekoBot.Database\PekoBot.Database.csproj" />
     <ProjectReference Include="..\PekoBot.Entities\PekoBot.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\Images\" />
   </ItemGroup>
 
 </Project>

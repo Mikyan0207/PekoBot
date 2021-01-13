@@ -1,7 +1,7 @@
-﻿using PekoBot.Database.Repositories.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using PekoBot.Database.Repositories.Interfaces;
 using PekoBot.Entities.Models;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace PekoBot.Database.Repositories
 {
@@ -9,7 +9,7 @@ namespace PekoBot.Database.Repositories
 	{
 		public GuildRepository(PekoBotContext context) : base(context)
 		{
-			
+
 		}
 
 		public async Task<Guild> GetByIdAsync(ulong id)

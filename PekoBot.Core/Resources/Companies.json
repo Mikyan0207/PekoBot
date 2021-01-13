@@ -1,0 +1,62 @@
+﻿[
+  {
+	"Name": "のりお プロダクション",
+	"EnglishName": "NoriPro",
+	"Code": "noriopro",
+	"Image": "Resources/Images/noriopro_400x400.png"
+  },
+  {
+	"Name": "にじさんじ",
+	"EnglishName": "Nijisanji",
+	"Code": "nijisanji",
+	"Image": "Resources/Images/nijisanji_400x400.png"
+  },
+  {
+	"Name": "ホロライブ",
+	"EnglishName": "hololive",
+	"Code": "hololive",
+	"Image": "Resources/Images/hololive_400x400.jpg"
+  },
+  {
+	"Name": "ホロスターズ",
+	"EnglishName": "holostars",
+	"Code": "holostars",
+	"Image": "Resources/Images/holostars_400x400.jpg"
+  },
+  {
+	"Name": "VShojo",
+	"EnglishName": "VShojo",
+	"Code": "vshojo",
+	"Image": "Resources/Images/vshojo_400x400.jpg"
+  },
+  {
+	"Name": "あにまーれ",
+	"EnglishName": "AniMare",
+	"Code": "animare",
+	"Image": "Resources/Images/animare_400x400.jpg"
+  },
+  {
+	"Name": "どっとライブ",
+	"EnglishName": ".LIVE",
+	"Code": "dotlive",
+	"Image": "Resources/Images/dotlive_400x400.jpg"
+  },
+  {
+	"Name": "花寄女子寮",
+	"EnglishName": "Hanayori Girls' Dormitory",
+	"Code": "hanayori",
+	"Image": "Resources/Images/hanayori_400x400.jpg"
+  },
+  {
+	"Name": "ViViD",
+	"EnglishName": "ViViD",
+	"Code": "vivid",
+	"Image": "Resources/Images/vivid_400x400.jpg"
+  },
+  {
+	"Name": "Tsunderia",
+	"EnglishName": "Tsunderia",
+	"Code": "tsunderia",
+	"Image": "Resources/Images/tsunderia_400x400.jpg"
+  }
+]

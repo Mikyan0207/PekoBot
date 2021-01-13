@@ -2,6 +2,7 @@
 using NLog;
 using PekoBot.Database.Repositories.Interfaces;
 using PekoBot.Entities.Models;
+using System;
 using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories
@@ -37,6 +38,14 @@ namespace PekoBot.Database.Repositories
 				Logger.Error(ex);
 				return null;
 			}
+		}
+
+		public async Task<Company> GetByNameAsync(string name)
+		{
+			return await Context
+				.Companies
+				.FirstOrDefaultAsync(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase))
+				.ConfigureAwait(false);
 		}
 	}
 }

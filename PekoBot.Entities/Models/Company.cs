@@ -11,6 +11,12 @@ namespace PekoBot.Entities.Models
 
 		public string Name { get; set; }
 
+		public string EnglishName { get; set; }
+
+		public string Code { get; set; }
+
+		public string Image { get; set; }
+
 		public IEnumerable<VTuber> VTubers { get; set; }
 	}
 }

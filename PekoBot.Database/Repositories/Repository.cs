@@ -1,9 +1,8 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using PekoBot.Database.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PekoBot.Database.Repositories.Interfaces;
 
 namespace PekoBot.Database.Repositories
 {

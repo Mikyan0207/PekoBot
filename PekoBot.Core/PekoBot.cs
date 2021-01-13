@@ -12,12 +12,15 @@ using PekoBot.Core.Extensions;
 using PekoBot.Core.Services;
 using PekoBot.Database;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using PekoBot.Entities.GraphQL;
 using PekoBot.Entities.Models;
 
@@ -81,28 +84,53 @@ namespace PekoBot.Core
 			});
 
 			CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
-
-			Client.MessageReactionAdded += ClientOnMessageReactionAdded;
-		}
-
-		private async Task ClientOnMessageReactionAdded(DiscordClient sender, MessageReactionAddEventArgs e)
-		{
-			using var uow = DbService.GetUnitOfWork();
-			var message = uow.Messages.GetMessageById(e.Message.Id);
-
-			if (message == null)
-				return;
-
-
 		}
 
 		public async Task RunAsync()
 		{
+			Logger.Info("Loading VTubers Companies...");
+			await SeedVTubersCompaniesAsync().ConfigureAwait(false);
+
+			Logger.Info("Loading VTubers...");
+			await SeedVTubersAsync().ConfigureAwait(false);
+
+			Logger.Info("Loading Emojis...");
+			await SeedEmojisAsync().ConfigureAwait(false);
+
 			await Client.ConnectAsync().ConfigureAwait(false);
 			await Task.Delay(-1).ConfigureAwait(false);
 		}
 
-		private async Task GetVTubers()
+		private async Task SeedVTubersCompaniesAsync()
+		{
+			var ctx = DbService.GetContext();
+			var content = await File.ReadAllTextAsync("Resources/Companies.json").ConfigureAwait(false);
+			var companies = JsonConvert.DeserializeObject<List<Entities.Json.Companies>>(content);
+
+
+			foreach (var c in companies.Where(company => !ctx.Companies.Any(x => x.Name == company.Name)))
+			{
+				try
+				{
+					await ctx.Companies.AddAsync(new Company
+					{
+						Name = c.Name,
+						EnglishName = c.EnglishName,
+						Code = c.Code,
+						Image = c.Image
+					}).ConfigureAwait(false);
+
+					await ctx.SaveChangesAsync().ConfigureAwait(false);
+				}
+				catch (DbUpdateConcurrencyException ex)
+				{
+					Logger.Error(ex);
+					break;
+				}
+			}
+		}
+
+		private async Task SeedVTubersAsync()
 		{
 			using var client = new GraphQLHttpClient(new GraphQLHttpClientOptions
 			{
@@ -130,7 +158,7 @@ namespace PekoBot.Core
 							EnglishName = ch.EnglishName,
 							AvatarUrl = ch.Image,
 							ChannelId = ch.Id,
-							Company = await uow.Companies.GetOrCreate(ch.Group).ConfigureAwait(false),
+							Company = await uow.Companies.GetByNameAsync(ch.Group).ConfigureAwait(false),
 							Statistics = new Statistics
 							{
 								SubscriberCount = ch.Statistics.SubscriberCount,
@@ -151,6 +179,33 @@ namespace PekoBot.Core
 					break;
 
 				response = await client.SendQueryAsync<ResponseObject>(new GraphQLHttpRequest($"query {{ vtuber {{ channels(cursor:\"{channelObject.PageInfo.NextCursor}\") {{ items {{ id user_id name en_name image platform group statistics {{ subscriberCount viewCount videoCount }} }} pageInfo {{ nextCursor hasNextPage }} }} }} }}")).ConfigureAwait(false);
+			}
+		}
+
+		private async Task SeedEmojisAsync()
+		{
+			var ctx = DbService.GetContext();
+			var content = await File.ReadAllTextAsync("Resources/Emojis.json").ConfigureAwait(false);
+			var emojis = JsonConvert.DeserializeObject<List<Entities.Json.Emoji>>(content);
+
+			foreach (var emoji in emojis.Where(e => !ctx.Emojis.Include(x => x.VTuber)
+				.Any(x => x.Code == e.Code && x.VTuber.EnglishName == e.Member)))
+			{
+				try
+				{
+					await ctx.Emojis.AddAsync(new Emoji
+					{
+						Code = emoji.Code,
+						VTuber = await ctx.VTubers.FirstOrDefaultAsync(x => x.EnglishName == emoji.Member)
+							.ConfigureAwait(false)
+					}).ConfigureAwait(false);
+					await ctx.SaveChangesAsync().ConfigureAwait(false);
+				}
+				catch (DbUpdateConcurrencyException ex)
+				{
+					Logger.Error(ex);
+					break;
+				}
 			}
 		}
 
