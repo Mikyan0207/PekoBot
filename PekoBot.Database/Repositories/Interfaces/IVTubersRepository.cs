@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
-using PekoBot.Entities.Models;
+﻿using PekoBot.Entities.Models;
+using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories.Interfaces
 {
 	public interface IVTubersRepository : IRepository<VTuber>
 	{
+		public Task<VTuber> GetOrCreate(string name);
+
 		public Task<VTuber> GetByChannelIdAsync(string channelId);
 
 		public Task<VTuber> GetByNameAsync(string name);

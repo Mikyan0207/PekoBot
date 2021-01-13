@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using GraphQL.Client.Http;
 using GraphQL.Client.Serializer.Newtonsoft;
+using PekoBot.Entities.GraphQL;
 
 namespace PekoBot.Core.Services
 {
@@ -56,10 +57,7 @@ namespace PekoBot.Core.Services
 
 		private void Initialize(PekoBotContext context)
 		{
-			using var client = new GraphQLHttpClient(new GraphQLHttpClientOptions
-			{
-				EndPoint = new Uri("https://api.ihateani.me/v2/graphql")
-			}, new NewtonsoftJsonSerializer());
+
 		}
 	}
 }

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
 using PekoBot.Database.Repositories.Interfaces;
-using PekoBot.Entities;
 using PekoBot.Entities.Models;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories
 {
@@ -27,7 +26,7 @@ namespace PekoBot.Database.Repositories
 					.ThenInclude(y => y.Roles)
 				.Include(x => x.VTuber)
 					.ThenInclude(y => y.Company)
-				.Where(x=>!x.Notified && (x.ScheduledStartTime - DateTime.UtcNow) <= TimeSpan.FromMinutes(15))
+				.Where(x => !x.Notified && (x.ScheduledStartTime - DateTime.UtcNow) <= TimeSpan.FromMinutes(15))
 				.ToListAsync()
 				.ConfigureAwait(false);
 		}

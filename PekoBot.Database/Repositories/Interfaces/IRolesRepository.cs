@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using PekoBot.Entities.Models;
+﻿using PekoBot.Entities.Models;
+using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories.Interfaces
 {

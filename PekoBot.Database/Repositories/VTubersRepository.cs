@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PekoBot.Database.Repositories.Interfaces;
 using PekoBot.Entities.Models;
+using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories
 {
@@ -17,7 +15,7 @@ namespace PekoBot.Database.Repositories
 		{
 			return await Context
 				.VTubers
-				.FirstOrDefaultAsync(x => x.YoutubeId == channelId)
+				.FirstOrDefaultAsync(x => x.ChannelId == channelId)
 				.ConfigureAwait(false);
 		}
 
@@ -25,8 +23,23 @@ namespace PekoBot.Database.Repositories
 		{
 			return await Context
 				.VTubers
-				.FirstOrDefaultAsync(x=>x.Name == name)
+				.FirstOrDefaultAsync(x => x.Name == name)
 				.ConfigureAwait(false);
+		}
+
+		public async Task<VTuber> GetOrCreate(string name)
+		{
+			var vtuber = await Context.VTubers.FirstOrDefaultAsync(x => x.Name == name).ConfigureAwait(false);
+
+			if (vtuber != null)
+				return vtuber;
+
+			var e = await Context.VTubers.AddAsync(new VTuber
+			{
+				Name = name
+			}).ConfigureAwait(false);
+
+			return e.Entity;
 		}
 	}
 }

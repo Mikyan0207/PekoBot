@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using PekoBot.Entities.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using PekoBot.Entities.Models;
 
 namespace PekoBot.Database.Repositories.Interfaces
 {

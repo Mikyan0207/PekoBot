@@ -13,18 +13,16 @@ namespace PekoBot.Entities.Models
 
 		public string EnglishName { get; set; }
 
-		public string YoutubeId { get; set; }
+		public string ChannelId { get; set; }
 
 		public string AvatarUrl { get; set; }
 
-		public int SubscriberCount { get; set; }
+		public Statistics Statistics { get; set; }
 
 		public Company Company { get; set; }
 
 		public Emoji Emoji { get; set; }
 
 		public List<Role> Roles { get; set; }
-
-		public List<Account> Accounts { get; set; }
 	}
 }

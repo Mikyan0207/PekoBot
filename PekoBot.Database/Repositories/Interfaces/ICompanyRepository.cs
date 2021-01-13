@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories.Interfaces
 {
-	public interface IMessageRepository : IRepository<Message>
+	public interface ICompanyRepository : IRepository<Company>
 	{
-		public Task<Message> GetMessageById(ulong messageId);
+		public Task<Company> GetOrCreate(string name);
 	}
 }

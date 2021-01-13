@@ -10,6 +10,9 @@ namespace PekoBot.Entities.GraphQL
 		[JsonProperty("upcoming", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
 		public VTuberLivesObject VTuberUpcomingLives { get; set; }
 
+		[JsonProperty("channels", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
+		public VTuberChannelsObject VTuberChannelsObject { get; set; }
+
 		[JsonProperty("pageInfo", NullValueHandling = NullValueHandling.Ignore, DefaultValueHandling = DefaultValueHandling.Populate)]
 		public PageInfoObject PageInfo { get; set; }
 	}

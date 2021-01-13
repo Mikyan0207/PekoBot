@@ -1,7 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using PekoBot.Database.Repositories;
+﻿using PekoBot.Database.Repositories;
 using PekoBot.Database.Repositories.Interfaces;
+using System.Threading.Tasks;
 
 namespace PekoBot.Database
 {
@@ -31,6 +30,9 @@ namespace PekoBot.Database
 
 		private IChannelRepository _channelRepository;
 		public IChannelRepository Channels => _channelRepository ??= new ChannelRepository(Context);
+
+		private ICompanyRepository _companyRepository;
+		public ICompanyRepository Companies => _companyRepository ??= new CompanyRepository(Context);
 
 		private ILiveRepository _liveRepository;
 		public ILiveRepository Lives => _liveRepository ??= new LiveRepository(Context);

@@ -5,7 +5,6 @@ namespace PekoBot.Database
 {
 	public class PekoBotContext : DbContext
 	{
-		public DbSet<Account> Accounts { get; set; }
 		public DbSet<Channel> Channels { get; set; }
 
 		public DbSet<Company> Companies { get; set; }
@@ -19,6 +18,8 @@ namespace PekoBot.Database
 		public DbSet<Message> Messages { get; set; }
 
 		public DbSet<Role> Roles { get; set; }
+
+		public DbSet<Statistics> Statistics { get; set; }
 
 		public DbSet<User> Users { get; set; }
 
@@ -61,10 +62,6 @@ namespace PekoBot.Database
 
 			modelBuilder.Entity<VTuber>()
 				.HasMany(x => x.Roles)
-				.WithOne(x => x.VTuber);
-
-			modelBuilder.Entity<VTuber>()
-				.HasMany(x => x.Accounts)
 				.WithOne(x => x.VTuber);
 
 			modelBuilder.Entity<Message>()

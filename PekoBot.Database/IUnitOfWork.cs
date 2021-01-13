@@ -1,6 +1,6 @@
-﻿using System;
+﻿using PekoBot.Database.Repositories.Interfaces;
+using System;
 using System.Threading.Tasks;
-using PekoBot.Database.Repositories.Interfaces;
 
 namespace PekoBot.Database
 {
@@ -9,6 +9,8 @@ namespace PekoBot.Database
 		PekoBotContext Context { get; set; }
 
 		public IChannelRepository Channels { get; }
+
+		public ICompanyRepository Companies { get; }
 
 		public ILiveRepository Lives { get; }
 
