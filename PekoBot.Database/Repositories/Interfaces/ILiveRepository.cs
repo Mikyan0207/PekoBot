@@ -8,6 +8,6 @@ namespace PekoBot.Database.Repositories.Interfaces
 	{
 		public Task<Live> GetLiveByIdAsync(string id);
 
-		public Task<IEnumerable<Live>> GetUpcomingLivesWithMember();
+		public Task<IEnumerable<Live>> GetUpcomingLives();
 	}
 }

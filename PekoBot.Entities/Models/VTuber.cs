@@ -30,5 +30,7 @@ namespace PekoBot.Entities.Models
 		public string EmojiId { get; set; }
 
 		public List<Role> Roles { get; set; }
+
+		public List<Channel> Channels { get; set; }
 	}
 }

@@ -7,15 +7,15 @@
 
   <ItemGroup>
     <None Remove="Resources\Companies.json" />
-    <None Remove="Resources\Emojis.json" />
     <None Remove="Resources\PekoBotConfiguration.json" />
+    <None Remove="Resources\VTubers.json" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resources\Companies.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Emojis.json">
+    <EmbeddedResource Include="Resources\VTubers.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\PekoBotConfiguration.json">

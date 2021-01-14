@@ -11,8 +11,10 @@ using PekoBot.Entities.GraphQL;
 using PekoBot.Entities.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DSharpPlus.Entities;
 
 namespace PekoBot.Core.Modules.VTubers.Services
 {
@@ -76,7 +78,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 						if (LiveToken.IsCancellationRequested)
 							break;
 
-						await UpcomingLivesHandler().ConfigureAwait(false);
+						await NotificationHandler().ConfigureAwait(false);
 						await Task.Delay(TimeSpan.FromMinutes(20), LiveToken).ConfigureAwait(false);
 					}
 				}
@@ -292,13 +294,26 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		private async Task NotificationHandler()
 		{
 			using var uow = DbService.GetUnitOfWork();
-			var lives = await uow.Lives.GetUpcomingLivesWithMember().ConfigureAwait(false);
+			var lives = await uow.Lives.GetUpcomingLives().ConfigureAwait(false);
 
-			foreach (var live in lives)
+			foreach (var live in lives.Where(x=>x.VTuber.Company.Code=="hololive"))
 			{
 				try
 				{
+					foreach (var ch in live.VTuber.Channels)
+					{
+						var channel = await Client.GetChannelAsync(ch.ChannelId).ConfigureAwait(false);
 
+						await Client.SendMessageAsync(channel, null, false,
+							new DiscordEmbedBuilder()
+								.WithAuthor(live.VTuber.Name, $"https://youtube.com/channel/{live.VTuber.ChannelId}")
+								.WithTitle($"{live.Title}")
+								.WithThumbnail(new Uri(live.VTuber.Company.Image))
+								.AddField("Type", $"{(live.IsPremiere ? "Premiere" : "Live")}", true)
+								.AddField("Start Time", live.StartTime.ToShortTimeString(), true)
+								.AddField("Start in", (live.ScheduledStartTime - DateTime.UtcNow).Duration().ToString("hh:mm:ss"), true)
+								.WithTimestamp(DateTime.UtcNow)).ConfigureAwait(false);
+					}
 
 					live.Notified = true;
 					uow.Lives.Update(live);

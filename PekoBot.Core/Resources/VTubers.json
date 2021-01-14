@@ -1,0 +1,656 @@
+﻿[
+  {
+	"Name": "天使うと",
+	"EnglishName": "Amatsuka Uto",
+	"Nicknames": [
+	  "Tenshi",
+	  "Blue Pumpkin",
+	  "Aoi Kabocha"
+	],
+	"DebutDate": "2020/12/14",
+	"Company": "None",
+	"Generation": "None",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCdYR5Oyz8Q4g0ZmB4PkTD7g",
+		"Name": "天使うと / Amatsuka Uto",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwniYIj3gq6rP54uiKbOz4V1Enqf2-gYmIQOMKqhK_g=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "☁️"
+  },
+  // hololive
+  {
+	"Name": "ときのそら",
+	"EnglishName": "Tokino Sora",
+	"Nicknames": [
+	  "Sora",
+	  "Tokki",
+	  "Sora-chan"
+	],
+	"DebutDate": "2017/09/07",
+	"Company": "hololive",
+	"Generation": "Gen. 0",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCp6993wxpyDPHUpavwDFqgg",
+		"Name": "SoraCh. ときのそらチャンネル",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwngZmr_qbKhGIvHaHwLRmKhKxdeFfM7ZbK316vFNSw=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🐻"
+  },
+  {
+	"Name": "ロボ子",
+	"EnglishName": "Roboco",
+	"Nicknames": [
+	  "Roboco"
+	],
+	"DebutDate": "2018/03/04",
+	"Company": "hololive",
+	"Generation": "Gen. 0",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCDqI2jOz0weumE8s7paEk6g",
+		"Name": "Roboco Ch. - ロボ子",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnjiwtRNYHIo1zl37gOIiEeOh-2s7HUdhv6WB8M1vQ=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🤖"
+  },
+  {
+	"Name": "さくらみこ",
+	"EnglishName": "Sakura Miko",
+	"Nicknames": [
+	  "Miko-chi",
+	  "Mikochi",
+	  "Virtual Elite Miko",
+	  "Elite Miko",
+	  "sakuramiko35"
+	],
+	"DebutDate": "2018/08/01",
+	"Company": "hololive",
+	"Generation": "Gen. 0",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UC-hM6YJuNYVAmUWxeIr9FeA",
+		"Name": "Miko Ch. さくらみこ",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnivs5rzf7KS1U5FWL3Q23g31ZDNrsTFeczXsTV2hw=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  },
+	  {
+		"Platform": "Twitch",
+		"AccountId": "sakuramiko_hololive",
+		"Name": "さくらみこ",
+		"Image": "https://static-cdn.jtvnw.net/jtv_user_pictures/17563e35-9128-4ac0-8332-47e3af23b5cd-profile_image-70x70.png",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🌸"
+  },
+  {
+	"Name": "星街すいせい",
+	"EnglishName": "Hoshimachi Suisei",
+	"Nicknames": [
+	  "Sui-chan",
+	  "Meteor"
+	],
+	"DebutDate": "2018/03/22",
+	"Company": "hololive",
+	"Generation": "Gen. 0",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UC5CwaMl1eIgY8h02uZw7u8A",
+		"Name": "Suisei Channel",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnjdAl5rn3IjWzl55_0-skvKced7znPZRuPC5xLB=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "☄️"
+  },
+  {
+	"Name": "AZKi",
+	"EnglishName": "AZKi",
+	"Nicknames": [],
+	"DebutDate": "2018/11/15",
+	"Company": "hololive",
+	"Generation": "Gen. 0",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UC0TXe_LYZ4scaW2XMyi5_kw",
+		"Name": "AZKi Channel",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnikIko_2aD91x5MOTT2tETPe4R-7ozz6eIige3z=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "⚒"
+  },
+  {
+	"Name": "夜空メル",
+	"EnglishName": "Yozora Mel",
+	"Nicknames": [
+	  "Merumeru"
+	],
+	"DebutDate": "2018/05/13",
+	"Company": "hololive",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCD8HOxPs4Xvsm8H0ZxXGiBw",
+		"Name": "Mel Channel 夜空メルチャンネル",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnj5J44v4_Ua9qGrh_n8IR0Dp-r2yj0Nl0mv4lkR=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🌟"
+  },
+  {
+	"Name": "白上フブキ",
+	"EnglishName": "Shirakami Fubuki",
+	"Nicknames": [
+	  "Buki",
+	  "Fubuki-chan",
+	  "FBK",
+	  "Nazo Nazo Kamen",
+	  "Fox Burger King",
+	  "Fubuking",
+	  "Friend"
+	],
+	"DebutDate": "2018/06/01",
+	"Company": "hololive",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCdn5BQ06XqgXoAxIhbqw5Rg",
+		"Name": "フブキCh。白上フブキ",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnjfV6gSQIXQpGlFI21BO1EaRuwM_tnkH65IBruhxA=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🌽"
+  },
+  {
+	"Name": "夏色まつり",
+	"EnglishName": "Natsuiro Matsuri",
+	"Nicknames": [
+	  "Matsuri",
+	  "Matsuricha-senpai",
+	  "Matsuricha",
+	  "GOD"
+	],
+	"DebutDate": "2018/06/01",
+	"Company": "hololive",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCQ0UDLQCjY0rmuxCDE38FGg",
+		"Name": "Matsuri Channel 夏色まつり",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwni8cjtyc08E7rocvO9_gR1b5BhO1O6O1VreDxMW=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🏮"
+  },
+  {
+	"Name": "アキ・ローゼンタール",
+	"EnglishName": "Aki Rosenthal",
+	"Nicknames": [
+	  "Aki",
+	  "Akirose",
+	  "Akipella"
+	],
+	"DebutDate": "2018/06/07",
+	"Company": "hololive",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCFTLzh12_nrtzqBPsTCqenA",
+		"Name": "アキロゼCh。Vtuber/ホロライブ所属",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnhPGqWt_E_8rBXpKUTgHCuyTq0Zz7TXlkRtiIww=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  },
+	  {
+		"Platform": "TwitCasting",
+		"AccountId": "akirosenthal",
+		"Name": "アキロゼAkirose🍎ホロライブ1期生",
+		"Image": "https://imagegw02.twitcasting.tv/image3s/pbs.twimg.com/profile_images/1329429267185168388/72t0CJmA_bigger.jpg",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🍎"
+  },
+  {
+	"Name": "赤井はあと",
+	"EnglishName": "Akai Haato",
+	"Nicknames": [
+	  "Haachama",
+	  "Red-kun"
+	],
+	"DebutDate": "2018/06/02",
+	"Company": "hololive",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UC1CfXB_kRs3C-zaeTG3oGyg",
+		"Name": "Haachama Ch. はあちゃま",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwniNEkTtD4oWWNqwy_i4syL_HvkEdnmoFk2OZJ8iPQ=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "❣️"
+  },
+  {
+	"Name": "湊あくあ",
+	"EnglishName": "Minato Aqua",
+	"Nicknames": [
+	  "Aqua",
+	  "Akutan",
+	  "AMT",
+	  "Onion",
+	  "Sololive",
+	  "Baqua"
+	],
+	"DebutDate": "2018/08/08",
+	"Company": "hololive",
+	"Generation": "Gen. 2",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UC1opHUrw8rvnsadT-iGp7Cg",
+		"Name": "Aqua Ch. 湊あくあ",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwngM9Jmc29dvbOY43w7RWFbOZLU4tGtOkEwtt-g7PA=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "⚓️"
+  },
+  {
+	"Name": "紫咲シオン",
+	"EnglishName": "Murasaki Shion",
+	"Nicknames": [
+	  "Shion"
+	],
+	"DebutDate": "2018/08/17",
+	"Company": "hololive",
+	"Generation": "Gen. 2",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCXTpFs_3PqI41qX2d9tL2Rw",
+		"Name": "Shion Ch. 紫咲シオン",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwni5CHNTkw8RlOj-78oqDbWS6sEdH4VQR_c06B6s6Q=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🌙"
+  },
+  {
+	"Name": "百鬼あやめ",
+	"EnglishName": "Nakiri Ayame",
+	"Nicknames": [
+	  "Ayame",
+	  "Ojou",
+	  "Kijin Hyakki"
+	],
+	"DebutDate": "2018/09/03",
+	"Company": "hololive",
+	"Generation": "Gen. 2",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UC7fk0CB07ly8oSl0aqKkqFg",
+		"Name": "Nakiri Ayame Ch. 百鬼あやめ",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnh66ZORNcVma4Pn-Qic23kU3Kl4ZkHM3asCWjDh=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "👿"
+  },
+  {
+	"Name": "癒月ちょこ",
+	"EnglishName": "Yuzuki Choco",
+	"Nicknames": [
+	  "Choco-sensei"
+	],
+	"DebutDate": "2018/09/05",
+	"Company": "hololive",
+	"Generation": "Gen. 2",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UC1suqwovbL1kzsoaZgFZLKg",
+		"Name": "Choco Ch. 癒月ちょこ",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnh0dIB3uStuGrUZGGrubOATPiVSFDiweFCK-0cr=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "💋"
+  },
+  {
+	"Name": "大空スバル",
+	"EnglishName": "Oozora Subaru",
+	"Nicknames": [
+	  "Subaru",
+	  "Subachi",
+	  "Subatani Subao"
+	],
+	"DebutDate": "2018/09/16",
+	"Company": "hololive",
+	"Generation": "Gen. 2",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCvzGlP9oQwU--Y0r9id_jnA",
+		"Name": "Subaru Ch. 大空スバル",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwniCgko15I_x5bYWm0G2vnf5hZqD5hLOtLEDw0Na=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🚑"
+  },
+  {
+	"Name": "大神ミオ",
+	"EnglishName": "Ookami Mio",
+	"Nicknames": [
+	  "Mio",
+	  "Mio-sama",
+	  "Kurokami Omi"
+	],
+	"DebutDate": "2018/12/07",
+	"Company": "hololive",
+	"Generation": "Gamers",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCp-5t9SrOQwXMU7iIjQfARg",
+		"Name": "Mio Channel 大神ミオ",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwng30Wmfu39r1PLrF05pvAafn2a2Ex90ok2C6CTBmg=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🌲"
+  },
+  {
+	"Name": "猫又おかゆ",
+	"EnglishName": "Nekomata Okayu",
+	"Nicknames": [
+	  "Okayun"
+	],
+	"DebutDate": "2019/04/06",
+	"Company": "hololive",
+	"Generation": "Gamers",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCvaTdHTWBGv3MKj3KVqJVCw",
+		"Name": "Okayu Ch. 猫又おかゆ",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnjXQ3Gt3t3SdUMZHBhhEb_c1jqThHfDaVNJF_LJ=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🍙"
+  },
+  {
+	"Name": "戌神ころね",
+	"EnglishName": "Inugami Korone",
+	"Nicknames": [
+	  "Koro-san",
+	  "Koronen",
+	  "Doggo",
+	  "DOOG",
+	  "God Dog",
+	  "Rap Dog"
+	],
+	"DebutDate": "2019/04/13",
+	"Company": "hololive",
+	"Generation": "Gamers",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UChAnqc_AY5_I3Px5dig3X1Q",
+		"Name": "Korone Ch. 戌神ころね",
+		"Image": "",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🥐"
+  },
+  {
+	"Name": "兎田ぺこら",
+	"EnglishName": "Usada Pekora",
+	"Nicknames": [
+	  "Pekora",
+	  "Peko-chan",
+	  "Pekoracho",
+	  "Shachou"
+	],
+	"DebutDate": "2019/07/17",
+	"Company": "hololive",
+	"Generation": "Gen. 3",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UC1DCedRgGHBdm81E1llLhOQ",
+		"Name": "Pekora Ch. 兎田ぺこら",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnjvkyPGzOmEXZ34mEFPlwMKTbCDl1ZkQ_HkxY-O5Q=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "👯"
+  },
+  {
+	"Emoji": "🦋",
+	"EnglishName": "Uruha Rushia"
+  },
+  {
+	"Emoji": "🔥",
+	"EnglishName": "Shiranui Flare"
+  },
+  {
+	"Emoji": "⚔️",
+	"EnglishName": "Shirogane Noel"
+  },
+  {
+	"Emoji": "☠️",
+	"EnglishName": "Houshou Marine"
+  },
+  {
+	"Emoji": "💫",
+	"EnglishName": "Amane Kanata"
+  },
+  {
+	"Emoji": "🐉",
+	"EnglishName": "Kiryu Coco"
+  },
+  {
+	"Emoji": "🐏",
+	"EnglishName": "Tsunomaki Watame"
+  },
+  {
+	"Emoji": "👾",
+	"EnglishName": "Tokoyami Towa"
+  },
+  {
+	"Emoji": "🍬",
+	"EnglishName": "Himemori Luna"
+  },
+  {
+	"Emoji": "🥟",
+	"EnglishName": "Momosuzu Nene"
+  },
+  {
+	"Emoji": "☃️",
+	"EnglishName": "Yukihana Lamy"
+  },
+  {
+	"Emoji": "♌",
+	"EnglishName": "Shishiro Botan"
+  },
+  {
+	"Emoji": "🎪",
+	"EnglishName": "Omaru Polka"
+  },
+  {
+	"Emoji": "🐿",
+	"EnglishName": "Ayunda Risu"
+  },
+  {
+	"Emoji": "🔮",
+	"EnglishName": "Moona Hoshinova"
+  },
+  {
+	"Emoji": "🎨",
+	"EnglishName": "Airani Iofifteen"
+  },
+  {
+	"Emoji": "🧟‍",
+	"EnglishName": "Kureiji Ollie"
+  },
+  {
+	"Emoji": "🍂",
+	"EnglishName": "Anya Melfissa"
+  },
+  {
+	"Emoji": "🦚",
+	"EnglishName": "Pavolia Reine"
+  },
+  {
+	"Emoji": "💀",
+	"EnglishName": "Mori Calliope"
+  },
+  {
+	"Emoji": "🐔",
+	"EnglishName": "Takanashi Kiara"
+  },
+  {
+	"Emoji": "🐙",
+	"EnglishName": "Ninomae Ina'nis"
+  },
+  {
+	"Emoji": "🔱",
+	"EnglishName": "Gawr Gura"
+  },
+  {
+	"Emoji": "🔍",
+	"EnglishName": "Watson Amelia"
+  },
+  // holostars
+  {
+	"Emoji": "🌺",
+	"EnglishName": "Hanasaki Miyabi"
+  },
+  {
+	"Emoji": "🎸",
+	"EnglishName": "Kanade Izuru"
+  },
+  {
+	"Emoji": "🍕",
+	"EnglishName": "Arurandeisu"
+  },
+  {
+	"Emoji": "⚙️",
+	"EnglishName": "Rikka"
+  }
+]
