@@ -11,9 +11,7 @@
   <a href="https://github.com/mikyan0207/PekoBot">
     <img src="images/PekoBot_Icon.png" alt="Logo" width="120" height="120">
   </a>
-
   <h3 align="center">PekoBot</h3>
-
   <p align="center">
     Discord Bot for VTubers
     <br />
@@ -46,7 +44,8 @@
 <!-- SUPPORTED VTUBERS -->
 ## Supported VTubers
 
-* hololive (JP)
+- hololive (JP)
+- Amatsuka Uto
 
 <!-- REQUEST VTUBER -->
 ## Request a new VTuber
@@ -74,10 +73,10 @@ Project Link: [https://github.com/mikyan0207/PekoBot](https://github.com/mikyan0
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* [VTuber API](https://api.ihateani.me/v2/)
-* [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus)
+- [VTuber API](https://api.ihateani.me/v2/)
+- [DSharpPlus](https://github.com/DSharpPlus/DSharpPlus)
 
-* [PekoBot Icon](https://twitter.com/tomose_shunsaku)
+- [PekoBot Icon](https://twitter.com/tomose_shunsaku)
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
