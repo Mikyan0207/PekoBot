@@ -8,8 +8,8 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/mikyan0207/PekoBot">
-    <img src="images/PekoBot_Icon.jpg" alt="Logo" width="120" height="120" style="border-radius:50%;">
+  <a href="https://github.com/mikyan0207/PekoBot" style="border-radius:50%;">
+    <img src="images/PekoBot_Icon.jpg" alt="Logo" width="120" height="120">
   </a>
 
   <h3 align="center">PekoBot</h3>
