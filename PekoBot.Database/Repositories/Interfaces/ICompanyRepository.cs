@@ -8,5 +8,7 @@ namespace PekoBot.Database.Repositories.Interfaces
 		public Task<Company> GetOrCreate(string name);
 
 		public Task<Company> GetByNameAsync(string name);
+
+		public Task<Company> GetByCodeAsync(string code);
 	}
 }

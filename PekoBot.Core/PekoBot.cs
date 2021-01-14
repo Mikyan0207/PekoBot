@@ -91,33 +91,32 @@ namespace PekoBot.Core
 		{
 			await SeedVTubersCompaniesAsync().ConfigureAwait(false);
 			await SeedVTubersAsync().ConfigureAwait(false);
-			await SeedEmojisAsync().ConfigureAwait(false);
 
 			await Client.ConnectAsync().ConfigureAwait(false);
 			await Task.Delay(-1).ConfigureAwait(false);
 		}
 
-		private async Task SeedVTubersCompaniesAsync()
+		private Task SeedVTubersCompaniesAsync()
 		{
 			Logger.Info("Loading VTubers Companies..."); // @Debug
 
 			var ctx = DbService.GetContext();
-			var content = await File.ReadAllTextAsync("Resources/Companies.json").ConfigureAwait(false);
+			var content = File.ReadAllText("Resources/Companies.json");
 			var companies = JsonConvert.DeserializeObject<List<Entities.Json.Companies>>(content);
 
 			foreach (var c in companies.Where(company => !ctx.Companies.Any(x => x.Name == company.Name)))
 			{
 				try
 				{
-					await ctx.Companies.AddAsync(new Company
+					ctx.Companies.Add(new Company
 					{
 						Name = c.Name,
 						EnglishName = c.EnglishName,
 						Code = c.Code,
 						Image = c.Image
-					}).ConfigureAwait(false);
+					});
 
-					await ctx.SaveChangesAsync().ConfigureAwait(false);
+					ctx.SaveChanges();
 				}
 				catch (DbUpdateConcurrencyException ex)
 				{
@@ -127,6 +126,7 @@ namespace PekoBot.Core
 			}
 
 			Logger.Info($"Loaded {companies.Count} VTubers Companies..."); // @Debug
+			return Task.CompletedTask;
 		}
 
 		private async Task SeedVTubersAsync()
@@ -134,12 +134,10 @@ namespace PekoBot.Core
 			Logger.Info("Loading VTubers..."); // @Debug
 
 			var ctx = DbService.GetContext();
-			Logger.Info(ctx.VTubers.Count());
-
-
 			if (ctx.VTubers.Any())
 			{
 				Logger.Info($"Loaded {ctx.VTubers.Count()} VTubers..."); // @Debug
+				await SeedEmojisAsync().ConfigureAwait(false);
 				return;
 			}
 
@@ -166,7 +164,7 @@ namespace PekoBot.Core
 
 					try
 					{
-						var company = await uow.Companies.GetByNameAsync(ch.Group).ConfigureAwait(false);
+						var company = await uow.Companies.GetByCodeAsync(ch.Group).ConfigureAwait(false);
 						
 						await uow.VTubers.AddAsync(new VTuber
 						{
@@ -199,6 +197,7 @@ namespace PekoBot.Core
 			}
 
 			Logger.Info($"Loaded {nbr} VTubers..."); // @Debug
+			await SeedEmojisAsync().ConfigureAwait(false);
 		}
 
 		private async Task SeedEmojisAsync()
@@ -209,17 +208,29 @@ namespace PekoBot.Core
 			var content = await File.ReadAllTextAsync("Resources/Emojis.json").ConfigureAwait(false);
 			var emojis = JsonConvert.DeserializeObject<List<Entities.Json.Emoji>>(content);
 
-			foreach (var emoji in emojis.Where(e => !ctx.Emojis.Include(x => x.VTuber)
-				.Any(x => x.Code == e.Code && x.VTuber.EnglishName == e.Member)))
+			foreach (var emoji in emojis)
 			{
+				if (ctx.Emojis.Include(x=>x.VTuber).Any(x => x.Code == emoji.Code && x.VTuber.EnglishName == emoji.Member))
+					continue;
 				try
 				{
-					await ctx.Emojis.AddAsync(new Emoji
+					var vtuber = await ctx.VTubers.FirstOrDefaultAsync(x => x.EnglishName == emoji.Member)
+						.ConfigureAwait(false);
+
+
+					if (vtuber == null)
+					{
+						Logger.Info("VTuber not found.");
+						continue;
+					}
+
+					var e = await ctx.Emojis.AddAsync(new Emoji
 					{
 						Code = emoji.Code,
-						VTuber = await ctx.VTubers.FirstOrDefaultAsync(x => x.EnglishName == emoji.Member)
-							.ConfigureAwait(false)
+						VTuber = vtuber
 					}).ConfigureAwait(false);
+					vtuber.EmojiId = e.Entity.Id;
+					ctx.VTubers.Update(vtuber);
 					await ctx.SaveChangesAsync().ConfigureAwait(false);
 				}
 				catch (DbUpdateConcurrencyException ex)

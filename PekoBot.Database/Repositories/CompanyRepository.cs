@@ -49,5 +49,13 @@ namespace PekoBot.Database.Repositories
 
 			return companies.FirstOrDefault(x => x.Name.ToLowerInvariant() == name.ToLowerInvariant());
 		}
+
+		public async Task<Company> GetByCodeAsync(string code)
+		{
+			return await Context
+				.Companies
+				.FirstOrDefaultAsync(x => x.Code == code)
+				.ConfigureAwait(false);
+		}
 	}
 }

@@ -15,6 +15,9 @@ namespace PekoBot.Database.Repositories
 		{
 			return await Context
 				.VTubers
+				.Include(x => x.Company)
+				.Include(x => x.Statistics)
+				.Include(x => x.Emoji)
 				.FirstOrDefaultAsync(x => x.ChannelId == channelId)
 				.ConfigureAwait(false);
 		}
@@ -23,7 +26,10 @@ namespace PekoBot.Database.Repositories
 		{
 			return await Context
 				.VTubers
-				.FirstOrDefaultAsync(x => x.Name == name)
+				.Include(x => x.Company)
+				.Include(x => x.Statistics)
+				.Include(x => x.Emoji)
+				.FirstOrDefaultAsync(x => x.Name == name || x.EnglishName == name)
 				.ConfigureAwait(false);
 		}
 
