@@ -25,7 +25,7 @@
 	],
 	"Emoji": "☁️"
   },
-  // hololive
+  // hololive jp
   {
 	"Name": "ときのそら",
 	"EnglishName": "Tokino Sora",
@@ -865,5 +865,147 @@
 	  }
 	],
 	"Emoji": "♌"
+  },
+  //hololive en
+  {
+	"Name": "森美声",
+	"EnglishName": "Mori Calliope",
+	"Nicknames": [
+	  "Calli",
+	  "Miss Mori",
+	  "CallioP"
+	],
+	"DebutDate": "2020/09/12",
+	"Company": "hololive English",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCL_qhgtOy0dy1Agp8vkySQg",
+		"Name": "Mori Calliope Ch. hololive-EN",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwngcfBYiWbxJXhxC2rtEk-2Uj_BrlQ0FNBdZblJn=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "💀"
+  },
+  {
+	"Name": "小鳥遊キアラ",
+	"EnglishName": "Takanashi Kiara",
+	"Nicknames": [
+	  "Kusotori",
+	  "Tenchou",
+	  "10/10cho"
+	],
+	"DebutDate": "2020/09/12",
+	"Company": "hololive English",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCHsx4Hqa-1ORjQTh9TYDhww",
+		"Name": "Takanashi Kiara Ch. hololive-EN",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnicJ682cy4GKD-ulxRnE2jOuihNWCULnqW2caej=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🐔"
+  },
+  {
+	"Name": "一伊那尓栖",
+	"EnglishName": "Ninomae Ina'nis",
+	"Nicknames": [
+	  "Ina",
+	  "Tako"
+	],
+	"DebutDate": "2020/09/13",
+	"Company": "hololive English",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCMwGHR0BTZuLsmjY_NT5Pwg",
+		"Name": "Ninomae Ina'nis Ch. hololive-EN",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwng37V0l-NwF3bu7QA4XmOP5EZFwk5zJE-78OHP9=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🐙"
+  },
+  {
+	"Name": "がうる・ぐら",
+	"EnglishName": "Gawr Gura",
+	"Nicknames": [
+	  "Gura",
+	  "Apex Predator",
+	  "Same",
+	  "Same-chan",
+	  "City Pop Shark"
+	],
+	"DebutDate": "2020/09/13",
+	"Company": "hololive English",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCoSrY_IQQVpmIRZ9Xf-y93g",
+		"Name": "Gawr Gura Ch. hololive-EN",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwnhSSaF3Q-PyyTSis4EH6Cu8FZ32LNvkxI9Gl_rn=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🔱"
+  },
+  {
+	"Name": "ワトソン・アメリア",
+	"EnglishName": "Watson Amelia",
+	"Nicknames": [
+	  "Ame",
+	  "Ame-chan"
+	],
+	"DebutDate": "2020/09/13",
+	"Company": "hololive English",
+	"Generation": "Gen. 1",
+	"Accounts": [
+	  {
+		"Platform": "YouTube",
+		"AccountId": "UCyl1z3jo3XHR1riLFKG5UAg",
+		"Name": "Watson Amelia Ch. hololive-EN",
+		"Image": "https://yt3.ggpht.com/ytc/AAUvwngENhxNHPzV4jjip28G3vswMxutvkaBhBjAMS0i=s88-c-k-c0x00ffffff-no-rj",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  },
+	  {
+		"Platform": "Twitch",
+		"AccountId": "bubb4bot",
+		"Name": "bubb4bot",
+		"Image": "https://static-cdn.jtvnw.net/jtv_user_pictures/39d78085-80d6-4ff4-a09f-70c26a112217-profile_image-70x70.png",
+		"Statistics": {
+		  "SubscriberCount": 0,
+		  "VideoCount": 0,
+		  "ViewCount": 0
+		}
+	  }
+	],
+	"Emoji": "🔍"
   }
 ]

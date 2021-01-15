@@ -44,7 +44,7 @@
 <!-- SUPPORTED VTUBERS -->
 ## Supported VTubers
 
-- hololive (JP)
+- hololive (JP, EN)
 - Amatsuka Uto
 
 <!-- REQUEST VTUBER -->
