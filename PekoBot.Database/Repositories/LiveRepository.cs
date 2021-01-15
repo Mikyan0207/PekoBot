@@ -24,7 +24,9 @@ namespace PekoBot.Database.Repositories
 			return await Context.Lives
 				.Include(x => x.VTuber)
 					.ThenInclude(y => y.Company)
-				.Where(x => !x.Notified && (x.ScheduledStartTime - DateTime.UtcNow) <= TimeSpan.FromMinutes(15))
+				.Include(x => x.VTuber)
+					.ThenInclude(y => y.Accounts)
+				.Where(x => !x.Notified)
 				.ToListAsync()
 				.ConfigureAwait(false);
 		}

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using PekoBot.Database.Repositories.Interfaces;
 using PekoBot.Entities.Models;
@@ -30,6 +31,17 @@ namespace PekoBot.Database.Repositories
 				.Include(x => x.Company)
 				.Include(x => x.Emoji)
 				.FirstOrDefaultAsync(x => x.Name == name || x.EnglishName == name)
+				.ConfigureAwait(false);
+		}
+
+		public async Task<List<VTuber>> GetByCompanyAsync(string company)
+		{
+			return await Context
+				.VTubers
+				.Include(x => x.Company)
+				.Include(x => x.Accounts)
+				.Where(x => x.Company.Code == company)
+				.ToListAsync()
 				.ConfigureAwait(false);
 		}
 

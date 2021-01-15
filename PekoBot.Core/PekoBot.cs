@@ -127,9 +127,8 @@ namespace PekoBot.Core
 					.WithAuthor("PekoBot", "https://github.com/Mikyan0207/PekoBot",
 						"https://github.com/Mikyan0207/PekoBot/blob/main/images/PekoBot_Icon.png?raw=true")
 					.WithDescription("こんぺこ〜")
-					.AddField("Peko Dashboard", "<link>", true)
-					.AddField("Github", "<link>", true)
-					.AddField("Patreon", "<link>", true)
+					.AddField("Peko Dashboard", "[pekobot.dev](https://pekobot.dev)", true)
+					.AddField("Github", "[PekoBot](https://github.com/Mikyan0207/PekoBot)", true)
 					.WithFooter($"Joined {e.Guild.Name} on {DateTime.UtcNow.ToShortDateString()}")).ConfigureAwait(false);
 			}
 			catch (DbUpdateConcurrencyException ex)

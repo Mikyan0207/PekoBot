@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus.Entities;
+using PekoBot.Entities.Enums;
 
 namespace PekoBot.Core.Modules.VTubers.Services
 {
@@ -79,7 +80,7 @@ namespace PekoBot.Core.Modules.VTubers.Services
 							break;
 
 						await NotificationHandler().ConfigureAwait(false);
-						await Task.Delay(TimeSpan.FromMinutes(20), LiveToken).ConfigureAwait(false);
+						await Task.Delay(TimeSpan.FromMinutes(2), LiveToken).ConfigureAwait(false);
 					}
 				}
 				catch (Exception e)
@@ -100,18 +101,18 @@ namespace PekoBot.Core.Modules.VTubers.Services
 			return true;
 		}
 
-		private static async Task<IEnumerable<LiveObject>> GetUpcomingLivesAsync()
+		private static async Task<IEnumerable<LiveObject>> GetUpcomingLivesAsync(string channelId)
 		{
 			try
 			{
 				var response = await GraphQLHttpClient.SendQueryAsync<ResponseObject>(new GraphQLRequest
 				{
-					Query = @"query {
-						vtuber { 
-							upcoming(groups: [""hololive""])
-							{
+					Query = $@"query {{
+						vtuber {{
+							upcoming(groups: [""hololive""], channel_id:[""{channelId}""])
+							{{
 								items
-								{
+								{{
 									id
 									title
 									thumbnail
@@ -119,25 +120,25 @@ namespace PekoBot.Core.Modules.VTubers.Services
 									group
 									viewers
 									is_premiere
-									timeData {
+									timeData {{
 										scheduledStartTime
 										startTime
 										lateBy
 										publishedAt
-									}
-									channel {
+									}}
+									channel {{
 										name
 										id
 										image
-									}
-								}
-								pageInfo {
+									}}
+								}}
+								pageInfo {{
 									nextCursor
 									hasNextPage
-								}
-							}
-						}
-					}
+								}}
+							}}
+						}}
+					}}
 				"
 				}).ConfigureAwait(false);
 
@@ -253,40 +254,45 @@ namespace PekoBot.Core.Modules.VTubers.Services
 		private async Task UpcomingLivesHandler()
 		{
 			using var uow = DbService.GetUnitOfWork();
-			var lives = await GetUpcomingLivesAsync().ConfigureAwait(false);
+			var vtubers = await uow.VTubers.GetByCompanyAsync("hololive").ConfigureAwait(false);
 
-			foreach (var live in lives)
+			foreach (var vtuber in vtubers)
 			{
-				var cachedLive = await uow.Lives.GetLiveByIdAsync(live.Id).ConfigureAwait(false);
+				var lives = await GetUpcomingLivesAsync(vtuber.Accounts.FirstOrDefault(x=>x.Platform==Platform.YouTube)?.AccountId).ConfigureAwait(false);
 
-				if (cachedLive != null)
-					continue;
-
-				try
+				foreach (var live in lives)
 				{
-					await uow.Lives.AddAsync(new Live
+					var cachedLive = await uow.Lives.GetLiveByIdAsync(live.Id).ConfigureAwait(false);
+
+					if (cachedLive != null)
+						continue;
+
+					try
 					{
-						LiveId = live.Id,
-						Title = live.Title,
-						Thumbnail = live.Thumbnail,
-						Platform = live.Platform.ToEnum<Platform>(),
-						Viewers = live.Viewers,
-						IsPremiere = live.IsPremiere,
-						Status = live.Status.ToEnum<Status>(),
-						ScheduledStartTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.ScheduledStartTime).UtcDateTime,
-						StartTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.StartTime).UtcDateTime,
-						EndTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.EndTime).UtcDateTime,
-						CreatedAt = live.Time.PublishedAt,
-						LateBy = live.Time.LateBy,
-						Duration = live.Time.Duration,
-						VTuber = await uow.VTubers.GetByChannelIdAsync(live.Channel.Id).ConfigureAwait(false),
-						Notified = false
-					}).ConfigureAwait(false);
-					await uow.SaveChangesAsync().ConfigureAwait(false);
-				}
-				catch (DbUpdateConcurrencyException ex)
-				{
-					Logger.Error(ex);
+						await uow.Lives.AddAsync(new Live
+						{
+							LiveId = live.Id,
+							Title = live.Title,
+							Thumbnail = live.Thumbnail,
+							Platform = live.Platform.ToEnum<Platform>(),
+							Viewers = live.Viewers,
+							IsPremiere = live.IsPremiere,
+							Status = live.Status.ToEnum<Status>(),
+							ScheduledStartTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.ScheduledStartTime).UtcDateTime,
+							StartTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.StartTime).UtcDateTime,
+							EndTime = DateTimeOffset.FromUnixTimeSeconds(live.Time.EndTime).UtcDateTime,
+							CreatedAt = live.Time.PublishedAt,
+							LateBy = live.Time.LateBy,
+							Duration = live.Time.Duration,
+							VTuber = await uow.VTubers.GetByChannelIdAsync(live.Channel.Id).ConfigureAwait(false),
+							Notified = false
+						}).ConfigureAwait(false);
+						await uow.SaveChangesAsync().ConfigureAwait(false);
+					}
+					catch (DbUpdateConcurrencyException ex)
+					{
+						Logger.Error(ex);
+					}
 				}
 			}
 		}
@@ -296,24 +302,29 @@ namespace PekoBot.Core.Modules.VTubers.Services
 			using var uow = DbService.GetUnitOfWork();
 			var lives = await uow.Lives.GetUpcomingLives().ConfigureAwait(false);
 
-			foreach (var live in lives.Where(x=>x.VTuber.Company.Code=="hololive"))
+			lives = lives.Where(x => (x.ScheduledStartTime - DateTime.UtcNow).Duration() <= TimeSpan.FromMinutes(15))
+				.ToList();
+
+			foreach (var live in lives.Where(x => x.VTuber.Company.Code == "hololive"))
 			{
 				try
 				{
-					//foreach (var ch in live.VTuber.Channels)
-					//{
-					//	var channel = await Client.GetChannelAsync(ch.ChannelId).ConfigureAwait(false);
+					Logger.Info(live.Title);
 
-					//	await Client.SendMessageAsync(channel, null, false,
-					//		new DiscordEmbedBuilder()
-					//			.WithAuthor(live.VTuber.Name, $"https://youtube.com/channel/{live.VTuber.ChannelId}")
-					//			.WithTitle($"{live.Title}")
-					//			.WithThumbnail(new Uri(live.VTuber.Company.Image))
-					//			.AddField("Type", $"{(live.IsPremiere ? "Premiere" : "Live")}", true)
-					//			.AddField("Start Time", live.StartTime.ToShortTimeString(), true)
-					//			.AddField("Start in", (live.ScheduledStartTime - DateTime.UtcNow).Duration().ToString("hh:mm:ss"), true)
-					//			.WithTimestamp(DateTime.UtcNow)).ConfigureAwait(false);
-					//}
+					var channel = await Client.GetChannelAsync(797092264030896138).ConfigureAwait(false);
+					var account = live.VTuber.Accounts.FirstOrDefault(x => x.Platform == Platform.YouTube);
+
+					await Client.SendMessageAsync(channel, null, false,
+						new DiscordEmbedBuilder()
+							.WithAuthor(live.VTuber.Name, $"https://youtube.com/channel/{account.AccountId}", account.Image)
+							.WithTitle($"{live.Title}")
+							.WithThumbnail(new Uri(live.VTuber.Company.Image))
+							.AddField("Type", $"{(live.IsPremiere ? "Premiere" : "Live")}", true)
+							.AddField("Platform", live.Platform.ToString("g"), true)
+							.AddField("Status", live.Status.ToString("g"), true)
+							.AddField("Start Time", live.StartTime.ToShortTimeString(), true)
+							.AddField("Start in", (live.ScheduledStartTime - DateTime.UtcNow).Duration().ToString("hh:mm:ss"), true)
+							.WithTimestamp(DateTime.UtcNow)).ConfigureAwait(false);
 
 					live.Notified = true;
 					uow.Lives.Update(live);

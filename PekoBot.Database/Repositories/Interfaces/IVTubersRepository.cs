@@ -1,4 +1,5 @@
-﻿using PekoBot.Entities.Models;
+﻿using System.Collections.Generic;
+using PekoBot.Entities.Models;
 using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories.Interfaces
@@ -10,5 +11,7 @@ namespace PekoBot.Database.Repositories.Interfaces
 		public Task<VTuber> GetByChannelIdAsync(string channelId);
 
 		public Task<VTuber> GetByNameAsync(string name);
+
+		public Task<List<VTuber>> GetByCompanyAsync(string company);
 	}
 }

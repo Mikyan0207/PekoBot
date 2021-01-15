@@ -25,5 +25,7 @@ namespace PekoBot.Entities.Models
 		public List<Account> Accounts { get; set; }
 
 		public Emoji Emoji { get; set; }
+
+		public List<Channel> Channels { get; set; }
 	}
 }

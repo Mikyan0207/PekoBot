@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using NLog;
 using PekoBot.Core.Services;
 
@@ -12,12 +10,12 @@ namespace PekoBot.Core.Modules.VTubers
 	[Description("VTubers related commands.")]
 	public class VTubersModule : PekoModule
 	{
-		private Logger Logger { get; }
+		private static Logger Logger { get; } = LogManager.GetCurrentClassLogger();
+
 		private DbService DbService { get; }
 
 		public VTubersModule(DbService dbService)
 		{
-			Logger = LogManager.GetCurrentClassLogger();
 			DbService = dbService;
 		}
 
