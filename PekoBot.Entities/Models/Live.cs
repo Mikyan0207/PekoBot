@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using PekoBot.Entities.Enums;
 
 namespace PekoBot.Entities.Models
 {
@@ -37,15 +38,6 @@ namespace PekoBot.Entities.Models
 		public VTuber VTuber { get; set; }
 
 		public bool Notified { get; set; } = false;
-	}
-
-	public enum Platform
-	{
-		Youtube,
-		Twitch,
-		Bilibili,
-		Twitcasting,
-		Other
 	}
 
 	public enum Status

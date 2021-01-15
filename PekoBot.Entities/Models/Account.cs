@@ -1,4 +1,5 @@
 ﻿using System;
+using PekoBot.Entities.Enums;
 
 namespace PekoBot.Entities.Models
 {

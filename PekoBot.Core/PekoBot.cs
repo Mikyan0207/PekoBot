@@ -1,6 +1,5 @@
 ﻿using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Enums;
 using DSharpPlus.Interactivity.Extensions;
@@ -18,13 +17,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using GraphQL.Client.Http;
-using GraphQL.Client.Serializer.Newtonsoft;
+using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using NLog.Fluent;
-using PekoBot.Entities.GraphQL;
 using PekoBot.Entities.Models;
+using PekoBot.Entities.Enums;
 
 namespace PekoBot.Core
 {
@@ -86,6 +84,58 @@ namespace PekoBot.Core
 			});
 
 			CommandsNext.RegisterCommands(Assembly.GetExecutingAssembly());
+
+			Client.GuildCreated += Client_GuildCreated;
+			Client.GuildDeleted += Client_GuildDeleted;
+		}
+
+		private async Task Client_GuildDeleted(DiscordClient sender, GuildDeleteEventArgs e)
+		{
+			try
+			{
+				using var uow = DbService.GetUnitOfWork();
+
+				await uow.Guilds.RemoveByIdAsync(e.Guild.Id).ConfigureAwait(false);
+			}
+			catch (DbUpdateConcurrencyException ex)
+			{
+				Logger.Error(ex);
+			}
+		}
+
+		private async Task Client_GuildCreated(DiscordClient sender, GuildCreateEventArgs e)
+		{
+			try
+			{
+				using var uow = DbService.GetUnitOfWork();
+
+				if (await uow.Guilds.AnyAsync(x => x.GuildId == e.Guild.Id).ConfigureAwait(false))
+					return;
+
+				await uow.Guilds.AddAsync(new Guild
+				{
+					Name = e.Guild.Name,
+					GuildId = e.Guild.Id,
+					Description = e.Guild.Description,
+					IconUrl = e.Guild.IconUrl,
+					JoinedAt = e.Guild.JoinedAt.UtcDateTime,
+					MemberCount = e.Guild.MemberCount
+				}).ConfigureAwait(false);
+				await uow.SaveChangesAsync().ConfigureAwait(false);
+
+				await Client.SendMessageAsync(e.Guild.SystemChannel, null, false, new DiscordEmbedBuilder()
+					.WithAuthor("PekoBot", "https://github.com/Mikyan0207/PekoBot",
+						"https://github.com/Mikyan0207/PekoBot/blob/main/images/PekoBot_Icon.png?raw=true")
+					.WithDescription("こんぺこ〜")
+					.AddField("Peko Dashboard", "<link>", true)
+					.AddField("Github", "<link>", true)
+					.AddField("Patreon", "<link>", true)
+					.WithFooter($"Joined {e.Guild.Name} on {DateTime.UtcNow.ToShortDateString()}")).ConfigureAwait(false);
+			}
+			catch (DbUpdateConcurrencyException ex)
+			{
+				Logger.Error(ex);
+			}
 		}
 
 		public async Task RunAsync()

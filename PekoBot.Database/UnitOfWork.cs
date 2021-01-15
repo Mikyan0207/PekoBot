@@ -39,6 +39,9 @@ namespace PekoBot.Database
 		private ICompanyRepository _companyRepository;
 		public ICompanyRepository Companies => _companyRepository ??= new CompanyRepository(Context);
 
+		private IGuildRepository _guildRepository;
+		public IGuildRepository Guilds => _guildRepository ??= new GuildRepository(Context);
+
 		private ILiveRepository _liveRepository;
 		public ILiveRepository Lives => _liveRepository ??= new LiveRepository(Context);
 

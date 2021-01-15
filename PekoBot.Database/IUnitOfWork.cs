@@ -12,6 +12,8 @@ namespace PekoBot.Database
 
 		public ICompanyRepository Companies { get; }
 
+		public IGuildRepository Guilds { get; }
+
 		public ILiveRepository Lives { get; }
 
 		public IVTubersRepository VTubers { get; }

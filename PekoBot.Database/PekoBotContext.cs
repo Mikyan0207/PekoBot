@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using PekoBot.Entities.Models;
 
 namespace PekoBot.Database
@@ -63,6 +65,12 @@ namespace PekoBot.Database
 			modelBuilder.Entity<Message>()
 				.HasOne(x => x.Author)
 				.WithMany(x => x.Messages);
+
+			modelBuilder.Entity<VTuber>()
+				.Property(x => x.Nicknames)
+				.HasConversion(
+					v => string.Join(',', v),
+					v => v.Split(',', StringSplitOptions.RemoveEmptyEntries));
 
 			base.OnModelCreating(modelBuilder);
 		}

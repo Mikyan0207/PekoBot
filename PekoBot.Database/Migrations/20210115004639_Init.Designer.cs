@@ -9,7 +9,7 @@ using PekoBot.Database;
 namespace PekoBot.Database.Migrations
 {
     [DbContext(typeof(PekoBotContext))]
-    [Migration("20210113211232_Init")]
+    [Migration("20210115004639_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -17,6 +17,38 @@ namespace PekoBot.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.1");
+
+            modelBuilder.Entity("PekoBot.Entities.Models.Account", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AccountId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Platform")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("StatisticsId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("VTuberId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StatisticsId");
+
+                    b.HasIndex("VTuberId");
+
+                    b.ToTable("Account");
+                });
 
             modelBuilder.Entity("PekoBot.Entities.Models.Channel", b =>
                 {
@@ -279,13 +311,10 @@ namespace PekoBot.Database.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("AvatarUrl")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ChannelId")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("CompanyId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DebutDate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmojiId")
@@ -294,22 +323,35 @@ namespace PekoBot.Database.Migrations
                     b.Property<string>("EnglishName")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Generation")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("StatisticsId")
+                    b.Property<string>("Nicknames")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("EmojiId")
-                        .IsUnique();
-
-                    b.HasIndex("StatisticsId");
+                    b.HasIndex("EmojiId");
 
                     b.ToTable("VTubers");
+                });
+
+            modelBuilder.Entity("PekoBot.Entities.Models.Account", b =>
+                {
+                    b.HasOne("PekoBot.Entities.Models.Statistics", "Statistics")
+                        .WithMany()
+                        .HasForeignKey("StatisticsId");
+
+                    b.HasOne("PekoBot.Entities.Models.VTuber", null)
+                        .WithMany("Accounts")
+                        .HasForeignKey("VTuberId");
+
+                    b.Navigation("Statistics");
                 });
 
             modelBuilder.Entity("PekoBot.Entities.Models.Channel", b =>
@@ -356,7 +398,7 @@ namespace PekoBot.Database.Migrations
                         .HasForeignKey("UserId");
 
                     b.HasOne("PekoBot.Entities.Models.VTuber", "VTuber")
-                        .WithMany("Roles")
+                        .WithMany()
                         .HasForeignKey("VTuberId");
 
                     b.Navigation("Guild");
@@ -380,18 +422,12 @@ namespace PekoBot.Database.Migrations
                         .HasForeignKey("CompanyId");
 
                     b.HasOne("PekoBot.Entities.Models.Emoji", "Emoji")
-                        .WithOne("VTuber")
-                        .HasForeignKey("PekoBot.Entities.Models.VTuber", "EmojiId");
-
-                    b.HasOne("PekoBot.Entities.Models.Statistics", "Statistics")
                         .WithMany()
-                        .HasForeignKey("StatisticsId");
+                        .HasForeignKey("EmojiId");
 
                     b.Navigation("Company");
 
                     b.Navigation("Emoji");
-
-                    b.Navigation("Statistics");
                 });
 
             modelBuilder.Entity("PekoBot.Entities.Models.Channel", b =>
@@ -402,11 +438,6 @@ namespace PekoBot.Database.Migrations
             modelBuilder.Entity("PekoBot.Entities.Models.Company", b =>
                 {
                     b.Navigation("VTubers");
-                });
-
-            modelBuilder.Entity("PekoBot.Entities.Models.Emoji", b =>
-                {
-                    b.Navigation("VTuber");
                 });
 
             modelBuilder.Entity("PekoBot.Entities.Models.Guild", b =>
@@ -427,7 +458,7 @@ namespace PekoBot.Database.Migrations
 
             modelBuilder.Entity("PekoBot.Entities.Models.VTuber", b =>
                 {
-                    b.Navigation("Roles");
+                    b.Navigation("Accounts");
                 });
 #pragma warning restore 612, 618
         }
