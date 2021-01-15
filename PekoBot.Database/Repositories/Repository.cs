@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using PekoBot.Database.Repositories.Interfaces;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories
@@ -67,6 +70,26 @@ namespace PekoBot.Database.Repositories
 		public void Update(T entity)
 		{
 			Set.Update(entity);
+		}
+
+		public bool Any(Expression<Func<T, bool>> predicate)
+		{
+			return Set.Any(predicate);
+		}
+
+		public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+		{
+			return await Set.AnyAsync(predicate).ConfigureAwait(false);
+		}
+
+		public IQueryable<T> Where(Expression<Func<T, bool>> predicate)
+		{
+			return Set.Where(predicate);
+		}
+
+		public IQueryable<T> Where(Expression<Func<T, int, bool>> predicate)
+		{
+			return Set.Where(predicate);
 		}
 	}
 }

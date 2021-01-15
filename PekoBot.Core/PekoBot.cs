@@ -13,6 +13,7 @@ using PekoBot.Core.Services;
 using PekoBot.Database;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -96,151 +97,91 @@ namespace PekoBot.Core
 			await Task.Delay(-1).ConfigureAwait(false);
 		}
 
-		private Task SeedVTubersCompaniesAsync()
+		private async Task SeedVTubersCompaniesAsync()
 		{
-			Logger.Info("Loading VTubers Companies..."); // @Debug
+			Logger.Info("Loading VTuber Companies...");
 
-			var ctx = DbService.GetContext();
-			var content = File.ReadAllText("Resources/Companies.json");
+			var content = await File.ReadAllTextAsync("Resources/Companies.json").ConfigureAwait(false);
 			var companies = JsonConvert.DeserializeObject<List<Entities.Json.Companies>>(content);
 
-			foreach (var c in companies.Where(company => !ctx.Companies.Any(x => x.Name == company.Name)))
+			using var uow = DbService.GetUnitOfWork();
+
+			foreach (var c in companies)
 			{
 				try
 				{
-					ctx.Companies.Add(new Company
+					if (await uow.Companies.AnyAsync(x => x.Code == c.Code).ConfigureAwait(false))
+						continue;
+
+					await uow.Companies.AddAsync(new Company
 					{
 						Name = c.Name,
 						EnglishName = c.EnglishName,
 						Code = c.Code,
 						Image = c.Image
-					});
-
-					ctx.SaveChanges();
+					}).ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 				}
-				catch (DbUpdateConcurrencyException ex)
+				catch (DbUpdateConcurrencyException e)
 				{
-					Logger.Error(ex);
-					break;
+					Logger.Error(e);
 				}
 			}
 
-			Logger.Info($"Loaded {companies.Count} VTubers Companies..."); // @Debug
-			return Task.CompletedTask;
+			Logger.Info($"Loaded {companies.Count} VTuber Companies...");
 		}
 
 		private async Task SeedVTubersAsync()
 		{
-			Logger.Info("Loading VTubers..."); // @Debug
+			Logger.Info("Loading VTubers...");
 
-			var ctx = DbService.GetContext();
-			if (ctx.VTubers.Any())
+			var content = await File.ReadAllTextAsync("Resources/VTubers.json").ConfigureAwait(false);
+			var vtubers = JsonConvert.DeserializeObject<List<Entities.Json.VTuber>>(content);
+			
+			using var uow = DbService.GetUnitOfWork();
+
+			foreach (var vtuber in vtubers)
 			{
-				Logger.Info($"Loaded {ctx.VTubers.Count()} VTubers..."); // @Debug
-				await SeedEmojisAsync().ConfigureAwait(false);
-				return;
-			}
-
-			using var client = new GraphQLHttpClient(new GraphQLHttpClientOptions
-			{
-				EndPoint = new Uri("https://api.ihateani.me/v2/graphql")
-			}, new NewtonsoftJsonSerializer());
-			var response = await client.SendQueryAsync<ResponseObject>(new GraphQLHttpRequest($"query {{ vtuber {{ channels {{ items {{ id user_id name en_name image platform group statistics {{ subscriberCount viewCount videoCount }} }} pageInfo {{ nextCursor hasNextPage }} }} }} }}")).ConfigureAwait(false);
-			var nbr = 0;
-			var uow = DbService.GetUnitOfWork();
-
-			while (true)
-			{
-				var channelObject = response.Data.VTuber.VTuberChannelsObject;
-
-				nbr += channelObject.Channels.Count;
-
-				foreach (var ch in channelObject.Channels)
-				{
-					var e = await uow.VTubers.GetByNameAsync(ch.Name).ConfigureAwait(false);
-
-					if (e != null)
-						continue;
-
-					try
-					{
-						var company = await uow.Companies.GetByCodeAsync(ch.Group).ConfigureAwait(false);
-						
-						await uow.VTubers.AddAsync(new VTuber
-						{
-							Name = ch.Name,
-							EnglishName = ch.EnglishName,
-							AvatarUrl = ch.Image,
-							ChannelId = ch.Id,
-							Company = company,
-							Platform = ch.Platform,
-							Statistics = new Statistics
-							{
-								SubscriberCount = ch.Statistics.SubscriberCount,
-								ViewCount = ch.Statistics.ViewCount,
-								VideoCount = ch.Statistics.VideoCount
-							}
-						}).ConfigureAwait(false);
-						await uow.SaveChangesAsync().ConfigureAwait(false);
-					}
-					catch (DbUpdateConcurrencyException ex)
-					{
-						Logger.Error(ex);
-						return;
-					}
-				}
-
-				if (!channelObject.PageInfo.HasNextPage)
-					break;
-
-				response = await client.SendQueryAsync<ResponseObject>(new GraphQLHttpRequest($"query {{ vtuber {{ channels(cursor:\"{channelObject.PageInfo.NextCursor}\") {{ items {{ id user_id name en_name image platform group statistics {{ subscriberCount viewCount videoCount }} }} pageInfo {{ nextCursor hasNextPage }} }} }} }}")).ConfigureAwait(false);
-			}
-
-			Logger.Info($"Loaded {nbr} VTubers..."); // @Debug
-			await SeedEmojisAsync().ConfigureAwait(false);
-		}
-
-		private async Task SeedEmojisAsync()
-		{
-			Logger.Info("Loading VTubers Emojis..."); // @Debug
-
-			var ctx = DbService.GetContext();
-			var content = await File.ReadAllTextAsync("Resources/Emojis.json").ConfigureAwait(false);
-			var emojis = JsonConvert.DeserializeObject<List<Entities.Json.Emoji>>(content);
-
-			foreach (var emoji in emojis)
-			{
-				if (ctx.Emojis.Include(x=>x.VTuber).Any(x => x.Code == emoji.Code && x.VTuber.EnglishName == emoji.Member))
-					continue;
 				try
 				{
-					var vtuber = await ctx.VTubers.FirstOrDefaultAsync(x => x.EnglishName == emoji.Member)
-						.ConfigureAwait(false);
-
-
-					if (vtuber == null)
-					{
-						Logger.Info("VTuber not found.");
+					if (await uow.VTubers.AnyAsync(x => x.Name == vtuber.Name).ConfigureAwait(false))
 						continue;
-					}
 
-					var e = await ctx.Emojis.AddAsync(new Emoji
+					await uow.VTubers.AddAsync(new VTuber
 					{
-						Code = emoji.Code,
-						VTuber = vtuber
+						Name = vtuber.Name,
+						EnglishName = vtuber.EnglishName,
+						Nicknames = vtuber.Nicknames.ToArray(),
+						DebutDate = DateTime.Parse(vtuber.DebutDate, new CultureInfo("jp"), DateTimeStyles.None),
+						Company = await uow.Companies.GetByCodeAsync(vtuber.Company).ConfigureAwait(false),
+						Generation = vtuber.Generation,
+						Accounts = vtuber.Accounts.Select(x => new Account
+						{
+							Name = x.Name,
+							AccountId = x.AccountId,
+							Image = x.Image,
+							Platform = x.Platform.ToEnum<Platform>(),
+							Statistics = new Statistics
+							{
+								SubscriberCount = x.Statistics.SubscriberCount,
+								ViewCount = x.Statistics.ViewCount,
+								VideoCount = x.Statistics.VideoCount
+							}
+						}).ToList(),
+						Emoji = new Emoji
+						{
+							Code = vtuber.Emoji
+						}
 					}).ConfigureAwait(false);
-					vtuber.EmojiId = e.Entity.Id;
-					ctx.VTubers.Update(vtuber);
-					await ctx.SaveChangesAsync().ConfigureAwait(false);
+					await uow.SaveChangesAsync().ConfigureAwait(false);
 				}
-				catch (DbUpdateConcurrencyException ex)
+				catch (DbUpdateConcurrencyException e)
 				{
-					Logger.Error(ex);
-					break;
+					Logger.Error(e);
 				}
 			}
 
-			Logger.Info($"Loaded {emojis.Count} VTubers Emojis..."); // @Debug
+			Logger.Info($"Loaded {vtubers.Count} VTubers...");
 		}
 
 		public static void InitializeLogger()

@@ -41,10 +41,6 @@ namespace PekoBot.Database
 				.HasMany(x => x.VTubers)
 				.WithOne(x => x.Company);
 
-			modelBuilder.Entity<VTuber>()
-				.HasOne(x => x.Emoji)
-				.WithOne(x => x.VTuber);
-
 			modelBuilder.Entity<Guild>()
 				.HasMany(x => x.Channels)
 				.WithOne(x => x.Guild);
@@ -59,10 +55,6 @@ namespace PekoBot.Database
 
 			modelBuilder.Entity<Live>()
 				.HasOne(x => x.VTuber);
-
-			modelBuilder.Entity<VTuber>()
-				.HasMany(x => x.Roles)
-				.WithOne(x => x.VTuber);
 
 			modelBuilder.Entity<Message>()
 				.HasOne(x => x.Channel)

@@ -300,20 +300,20 @@ namespace PekoBot.Core.Modules.VTubers.Services
 			{
 				try
 				{
-					foreach (var ch in live.VTuber.Channels)
-					{
-						var channel = await Client.GetChannelAsync(ch.ChannelId).ConfigureAwait(false);
+					//foreach (var ch in live.VTuber.Channels)
+					//{
+					//	var channel = await Client.GetChannelAsync(ch.ChannelId).ConfigureAwait(false);
 
-						await Client.SendMessageAsync(channel, null, false,
-							new DiscordEmbedBuilder()
-								.WithAuthor(live.VTuber.Name, $"https://youtube.com/channel/{live.VTuber.ChannelId}")
-								.WithTitle($"{live.Title}")
-								.WithThumbnail(new Uri(live.VTuber.Company.Image))
-								.AddField("Type", $"{(live.IsPremiere ? "Premiere" : "Live")}", true)
-								.AddField("Start Time", live.StartTime.ToShortTimeString(), true)
-								.AddField("Start in", (live.ScheduledStartTime - DateTime.UtcNow).Duration().ToString("hh:mm:ss"), true)
-								.WithTimestamp(DateTime.UtcNow)).ConfigureAwait(false);
-					}
+					//	await Client.SendMessageAsync(channel, null, false,
+					//		new DiscordEmbedBuilder()
+					//			.WithAuthor(live.VTuber.Name, $"https://youtube.com/channel/{live.VTuber.ChannelId}")
+					//			.WithTitle($"{live.Title}")
+					//			.WithThumbnail(new Uri(live.VTuber.Company.Image))
+					//			.AddField("Type", $"{(live.IsPremiere ? "Premiere" : "Live")}", true)
+					//			.AddField("Start Time", live.StartTime.ToShortTimeString(), true)
+					//			.AddField("Start in", (live.ScheduledStartTime - DateTime.UtcNow).Duration().ToString("hh:mm:ss"), true)
+					//			.WithTimestamp(DateTime.UtcNow)).ConfigureAwait(false);
+					//}
 
 					live.Notified = true;
 					uow.Lives.Update(live);

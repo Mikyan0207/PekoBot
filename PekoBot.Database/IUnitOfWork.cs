@@ -23,5 +23,7 @@ namespace PekoBot.Database
 		int SaveChanges();
 
 		Task<int> SaveChangesAsync();
+
+		public IRepository<T> AsRepository<T>() where T : class;
 	}
 }

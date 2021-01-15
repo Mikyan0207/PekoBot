@@ -9,7 +9,5 @@ namespace PekoBot.Entities.Models
 		public string Id { get; set; } = Guid.NewGuid().ToString();
 
 		public string Code { get; set; }
-
-		public VTuber VTuber { get; set; }
 	}
 }

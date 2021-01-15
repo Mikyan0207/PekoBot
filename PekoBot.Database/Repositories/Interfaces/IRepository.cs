@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace PekoBot.Database.Repositories.Interfaces
@@ -24,5 +27,13 @@ namespace PekoBot.Database.Repositories.Interfaces
 		void RemoveRange(IEnumerable<T> entities);
 
 		void Update(T entity);
+
+		bool Any(Expression<Func<T, bool>> predicate);
+
+		Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
+
+		IQueryable<T> Where(Expression<Func<T, bool>> predicate);
+
+		IQueryable<T> Where(Expression<Func<T, int, bool>> predicate);
 	}
 }

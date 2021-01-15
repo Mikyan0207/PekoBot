@@ -23,6 +23,11 @@ namespace PekoBot.Database
 			return await Context.SaveChangesAsync().ConfigureAwait(false);
 		}
 
+		public IRepository<T> AsRepository<T>() where T : class
+		{
+			return new Repository<T>(Context);
+		}
+
 		public void Dispose()
 		{
 			Context.Dispose();

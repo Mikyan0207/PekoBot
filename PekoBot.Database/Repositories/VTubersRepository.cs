@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using PekoBot.Database.Repositories.Interfaces;
 using PekoBot.Entities.Models;
 using System.Threading.Tasks;
@@ -16,9 +17,9 @@ namespace PekoBot.Database.Repositories
 			return await Context
 				.VTubers
 				.Include(x => x.Company)
-				.Include(x => x.Statistics)
 				.Include(x => x.Emoji)
-				.FirstOrDefaultAsync(x => x.ChannelId == channelId)
+				.Include(x => x.Accounts)
+				.FirstOrDefaultAsync(x => x.Accounts.Any(y => y.AccountId == channelId))
 				.ConfigureAwait(false);
 		}
 
@@ -27,7 +28,6 @@ namespace PekoBot.Database.Repositories
 			return await Context
 				.VTubers
 				.Include(x => x.Company)
-				.Include(x => x.Statistics)
 				.Include(x => x.Emoji)
 				.FirstOrDefaultAsync(x => x.Name == name || x.EnglishName == name)
 				.ConfigureAwait(false);

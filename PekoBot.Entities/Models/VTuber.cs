@@ -14,23 +14,16 @@ namespace PekoBot.Entities.Models
 
 		public string EnglishName { get; set; }
 
-		public string ChannelId { get; set; }
+		public string[] Nicknames { get; set; }
 
-		public string AvatarUrl { get; set; }
-
-		public string Platform { get; set; }
-
-		public Statistics Statistics { get; set; }
+		public DateTime DebutDate { get; set; }
 
 		public Company Company { get; set; }
 
-		[ForeignKey("EmojiId")]
+		public string Generation { get; set; }
+
+		public List<Account> Accounts { get; set; }
+
 		public Emoji Emoji { get; set; }
-
-		public string EmojiId { get; set; }
-
-		public List<Role> Roles { get; set; }
-
-		public List<Channel> Channels { get; set; }
 	}
 }
